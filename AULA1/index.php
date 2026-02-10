@@ -1,8 +1,6 @@
 <?php
 session_start();
-
 $dados = $_SESSION['dados'] ?? [];
-
 ?>
 
 <!DOCTYPE html>
@@ -44,7 +42,6 @@ $dados = $_SESSION['dados'] ?? [];
 
         <label for="altura">Altura:</label>
         <input type="number" id="altura" name="altura" step='0.01' value="<?= $dados['altura'] ?? '' ?>">
-
 
         <input type="submit">
         <br>
