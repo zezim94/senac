@@ -2,10 +2,12 @@
 session_start();
 
 $dados = $_SESSION['dados'] ?? [];
+
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 
 <head>
     <meta charset="UTF-8">
