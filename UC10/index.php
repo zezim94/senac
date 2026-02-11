@@ -142,12 +142,14 @@ session_start();
 
         detalhesB.addEventListener('click', () => {
             detalhes.classList.toggle('hidden');
+            detalhesB.classList.toggle('hidden');
             container.classList.toggle('opacity');
         });
 
         close.addEventListener('click', () => {
             detalhes.classList.toggle('hidden');
             container.classList.toggle('opacity');
+            detalhesB.classList.toggle('hidden');
         });
 
     </script>

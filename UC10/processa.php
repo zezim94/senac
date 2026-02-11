@@ -7,6 +7,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['dados'] = [];
     }
 
+    if (empty($_SESSION['name']) || empty($_SESSION['idade']) || empty($_SESSION['sexo']) || empty($_SESSION['nota'])) {
+        $_SESSION['aviso'] = "Preencha todos os campos.";
+        header("Location: index.php");
+        exit;
+    }
+
     $name = $_POST["name"];
     $idade = $_POST["idade"];
     $sexo = $_POST["sexo"];

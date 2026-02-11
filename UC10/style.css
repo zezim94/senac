@@ -80,7 +80,8 @@ form {
 }
 
 .butons input,
-.butons a {
+.butons a,
+.detalhesB {
   text-decoration: none;
   padding: 10px 18px;
   border-radius: 5px;
@@ -89,6 +90,7 @@ form {
   color: #fff;
   font-size: 16px;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .resultado {
@@ -130,9 +132,6 @@ form {
   text-align: center;
   box-shadow: 0 0 5px red;
 }
-.detalhesB {
-  cursor: pointer;
-}
 
 .detalhes {
   position: fixed;
@@ -159,9 +158,11 @@ form {
 .hidden {
   display: none;
 }
+
 .opacity {
   opacity: 0.5;
 }
+
 .close {
   cursor: pointer;
   float: right;
