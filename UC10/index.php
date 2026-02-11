@@ -20,7 +20,7 @@ session_start();
 
         <?php
         if (isset($_SESSION['aviso'])) { ?>
-            <p> <?= $_SESSION['aviso'] ?></p>
+            <p class="aviso"> <?= $_SESSION['aviso'] ?></p>
             <?php unset(
                 $_SESSION['aviso']
 
@@ -99,12 +99,33 @@ session_start();
             }
             ?>
 
-
+            <h2 class="detalhesB">Detalhes</h2>
 
         </div>
     </div>
 
+    <div class="detalhes hidden">
+        <div class="close">X</div>
+
+        <?php
+
+        foreach ($_SESSION['dados'] as $pessoas) {
+            echo "<p class='pessoas'>" . $pessoas['nome'] . " ( " . $pessoas['idade'] . " - " . $pessoas['sexo'] . " - " . $pessoas['nota'] . " )</p>";
+        }
+
+        ?>
+    </div>
+
     <script>
+
+        const aviso = document.querySelector('.aviso')
+
+        if (aviso) {
+            setTimeout(() => {
+                aviso.remove()
+            }, 2500);
+        }
+
         const resultado = document.querySelector('.resultado')
         const pessoas = <?= $_SESSION['total_pessoas'] ?? 0; ?>;
 
@@ -113,6 +134,22 @@ session_start();
         } else {
             resultado.style.display = 'none'
         }
+
+        const detalhesB = document.querySelector('.detalhesB');
+        const detalhes = document.querySelector('.detalhes');
+        const container = document.querySelector('.container');
+        const close = document.querySelector('.close');
+
+        detalhesB.addEventListener('click', () => {
+            detalhes.classList.toggle('hidden');
+            container.classList.toggle('opacity');
+        });
+
+        close.addEventListener('click', () => {
+            detalhes.classList.toggle('hidden');
+            container.classList.toggle('opacity');
+        });
+
     </script>
 
 </body>

@@ -26,7 +26,7 @@ body {
 }
 
 .container h1 {
-  margin:0 0 30px;
+  margin: 0 0 30px;
 }
 
 form {
@@ -68,8 +68,8 @@ form {
   border-radius: 5px;
 }
 
-.sexoValue:hover{
-    border: 1px solid #999;
+.sexoValue:hover {
+  border: 1px solid #999;
 }
 
 .butons {
@@ -91,31 +91,79 @@ form {
   font-weight: bold;
 }
 
-.resultado{
-    background-color: #eee;
-    width: 70%;
-    margin-top: 20px;
-    padding: 10px;
-    border-radius: 5px;
+.resultado {
+  background-color: #eee;
+  width: 70%;
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 5px;
 }
 
-.resultado h2{
-    text-align: center;
-    margin-bottom: 15px;
+.resultado h2 {
+  text-align: center;
+  margin-bottom: 15px;
 }
 
 .resultado h3,
-.resultado p{
-    display: inline-block;
-    width: 49%;
-    margin-bottom: 5px;
+.resultado p {
+  display: inline-block;
+  width: 49%;
+  margin-bottom: 5px;
 }
 
-.resultado h3{
-    text-align: left;
-    font-size: 17px;
+.resultado h3 {
+  text-align: left;
+  font-size: 17px;
 }
 
-.resultado p{
-    text-align: right;
+.resultado p {
+  text-align: right;
+}
+
+.aviso {
+  color: red;
+  font-size: 14px;
+  border: 1px solid red;
+  border-radius: 5px;
+  padding: 5px;
+  width: 70%;
+  text-align: center;
+  box-shadow: 0 0 5px red;
+}
+.detalhesB {
+  cursor: pointer;
+}
+
+.detalhes {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #0b223b;
+  color: #fff;
+  width: 400px;
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 100;
+}
+
+.detalhes p {
+  margin: 5px 0;
+}
+
+.pessoas {
+  width: 100% !important;
+  text-align: center !important;
+}
+
+.hidden {
+  display: none;
+}
+.opacity {
+  opacity: 0.5;
+}
+.close {
+  cursor: pointer;
+  float: right;
+  color: red;
 }
