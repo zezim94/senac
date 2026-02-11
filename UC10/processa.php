@@ -12,6 +12,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sexo = $_POST["sexo"];
     $nota = $_POST["nota"];
 
+
+
+    foreach ($_SESSION['dados'] as $dado) {
+        if (strtolower($dado['nome']) == strtolower($name)) {
+            $_SESSION['aviso'] = $name . " já preencheu o formulário.";
+            header("Location: index.php");
+            exit;
+        }
+    }
+
+
     $_SESSION['dados'][] = [
         'nome' => $name,
         'idade' => $idade,
@@ -56,6 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
     }
+
     if ($total_pessoas > 0) {
 
         $_SESSION['total_pessoas'] = $total_pessoas;

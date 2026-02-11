@@ -18,6 +18,17 @@ session_start();
 
         <h1>Avatar: Fogo e Cinzas</h1>
 
+        <?php
+        if (isset($_SESSION['aviso'])) { ?>
+            <p> <?= $_SESSION['aviso'] ?></p>
+            <?php unset(
+                $_SESSION['aviso']
+
+            ) ?>
+            <?php
+        }
+        ?>
+
         <form action="processa.php" method="POST">
 
             <div class="group">
@@ -32,10 +43,12 @@ session_start();
 
             <div class="group" id="sexo">
                 <label>Sexo:</label>
-                <input type="radio" id="sexom" name="sexo" value="Masculino">
-                <label for="sexom">Masculino</label>
-                <input type="radio" id="sexof" name="sexo" value="Feminino">
-                <label for="sexof">Feminino</label>
+                <div class="sexoValue">
+                    <input type="radio" id="sexom" name="sexo" value="Masculino" checked>
+                    <label for="sexom">Masculino</label>
+                    <input type="radio" id="sexof" name="sexo" value="Feminino">
+                    <label for="sexof">Feminino</label>
+                </div>
             </div>
 
             <div class="group">
@@ -59,23 +72,48 @@ session_start();
             <?php
 
             if (isset($_SESSION['media_idade'])) {
-                echo "<h2>Resultado:</h2>";
-                echo "Total de pessoas: " . $_SESSION['total_pessoas'] . "<br>";
-                echo "<hr>";
-                echo "Total de homens: " . number_format($_SESSION['mas'], 2) . "%" . "<br>";
-                echo "Total de mulheres: " . number_format($_SESSION['fem'], 2) . "%" . "<br>";
-                echo "<hr>";
-                echo "Total de excelentes: " . number_format($_SESSION['excelente'], 2) . "%" . "<br>";
-                echo "Total de bons: " . number_format($_SESSION['bom'], 2) . "%" . "<br>";
-                echo "Total de regulares: " . number_format($_SESSION['regular'], 2) . "%" . "<br>";
-                echo "Total de péssimos: " . number_format($_SESSION['pessimo'], 2) . "%" . "<br>";
-                echo "<hr>";
-                echo "Média de idade: " . number_format($_SESSION['media_idade'], 2) . "<br>";
+                ?>
+                <h2>Resultado</h2>
+
+                <h3>Total de pessoas:</h3>
+                <p> <?= $_SESSION['total_pessoas'] ?> </p>
+                <hr>
+                <h3>Homens:</h3>
+                <p> <?= number_format($_SESSION['mas'], 2) . "%" ?> </p>
+                <h3>Mulheres: </h3>
+                <p> <?= number_format($_SESSION['fem'], 2) . "%" ?> </p>
+                <hr>
+                <h3>Excelente: </h3>
+                <p> <?= number_format($_SESSION['excelente'], 2) . "%" ?> </p>
+                <h3>Bom: </h3>
+                <p> <?= number_format($_SESSION['bom'], 2) . "%" ?> </p>
+                <h3>Regular: </h3>
+                <p> <?= number_format($_SESSION['regular'], 2) . "%" ?> </p>
+                <h3>Péssimo: </h3>
+                <p> <?= number_format($_SESSION['pessimo'], 2) . "%" ?> </p>
+                <hr>
+                <h3>Média de idade:</h3>
+                <p> <?= number_format($_SESSION['media_idade'], 2) ?></p>
+
+                <?php
             }
             ?>
+
+
+
         </div>
     </div>
 
+    <script>
+        const resultado = document.querySelector('.resultado')
+        const pessoas = <?= $_SESSION['total_pessoas'] ?? 0; ?>;
+
+        if (pessoas > 0) {
+            resultado.style.display = 'block'
+        } else {
+            resultado.style.display = 'none'
+        }
+    </script>
 
 </body>
 
