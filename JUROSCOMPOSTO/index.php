@@ -54,8 +54,8 @@ session_start();
             <div class="resultado">
                 <?php
                 if (isset($_SESSION['juros1'])) {
-                    echo "Juros: R$ " . number_format($_SESSION['juros1'], 2, ',', '.') . "<br>";
-                    echo "Montante: R$ " . number_format($_SESSION['montante1'], 2, ',', '.') . "<br>";
+                    echo "<p>Juros: R$ " . number_format($_SESSION['juros1'], 2, ',', '.') . "<br></p>";
+                    echo "<p>Montante: R$ " . number_format($_SESSION['montante1'], 2, ',', '.') . "<br></p>";
                 }
                 ?>
             </div>
