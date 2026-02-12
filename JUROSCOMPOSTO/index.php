@@ -92,13 +92,13 @@ session_start();
             <form action="processa.php" method="POST">
                 <input type="hidden" name="operacao" value="3">
                 <label for="capital3">Capital</label>
-                <input type="number" name="capital3" id="capital3"
+                <input type="number" name="capital3" step="0.01" id="capital3"
                     value="<?php echo isset($_SESSION['capital3']) ? $_SESSION['capital3'] : ''; ?>">
                 <label for="juros3">Juros</label>
-                <input type="number" name="juros3" id="juros3"
+                <input type="number" name="juros3" step="0.01" id="juros3"
                     value="<?php echo isset($_SESSION['juros3']) ? $_SESSION['juros3'] : ''; ?>">
                 <label for="prazo3">Prazo</label>
-                <input type="number" name="prazo3" id="prazo3"
+                <input type="number" name="prazo3" step="0.01" id="prazo3"
                     value="<?php echo isset($_SESSION['prazo3']) ? $_SESSION['prazo3'] : ''; ?>">
                 <input type="submit" value="Calcular">
             </form>
