@@ -12,6 +12,8 @@ $nome  = trim($_POST['nome']);
 $email = trim($_POST['email']);
 $senha = trim($_POST['senha']);
 $nivel = trim($_POST['nivel']);
+$status = trim($_POST['status']);
+$preco = trim($_POST['preco']);
 
 // Ler JSON
 $arquivo = file_get_contents('login.JSON');
@@ -24,6 +26,8 @@ foreach ($usuarios as &$user) {
         $user['Email'] = $email;
         $user['Senha'] = $senha; // futuramente hash
         $user['Nivel'] = $nivel;
+        $user['Status'] = $status;
+        $user['Preco'] = $preco;
         break;
     }
 }

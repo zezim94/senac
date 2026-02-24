@@ -11,11 +11,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $idUser = $_SESSION['id'];
     $nivelUser = $_SESSION['nivel'];
 
-    $arquivo = fopen('arquivo.txt', 'a');
+    $arquivo = file_get_contents('arquivo.JSON');
+    $chamados = json_decode($arquivo, true);
 
-    fwrite($arquivo, $idUser . ' - ' . $nomeUser . ' - ' . $nivelUser . ' - ' . $titulo . ' - ' . $categoria . ' - ' . $descricao . PHP_EOL);
+    $chamado = array(
+        'id' => count($chamados) + 1,
+        'nome' => $nomeUser,
+        'equipamento' => $titulo,
+        'categoria' => $categoria,
+        'descricao' => $descricao,
+        'status' => 'aberto',
+        'preco' => ''
+    );
 
-    fclose($arquivo);
+    $chamados[] = $chamado;
+
+    file_put_contents('arquivo.JSON', json_encode($chamados));
 
     header('Location: consultar_chamado.php');
     exit;

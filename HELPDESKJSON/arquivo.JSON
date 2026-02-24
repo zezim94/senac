@@ -1,42 +1,61 @@
 [
-    {
-        "id": 1,
-        "nome": "Andelson",
-        "nivel": "admin",
-        "equipamento": "Notebook",
-        "categoria": "hardware",
-        "descricao": "Queimou a tela"
-    },
-    {
-        "id": 1,
-        "nome": "Andelson",
-        "nivel": "admin",
-        "equipamento": "PC",
-        "categoria": "software",
-        "descricao": "não liga"
-    },
-    {
-        "id": 1,
-        "nome": "Andelson",
-        "nivel": "admin",
-        "equipamento": "Impressora",
-        "categoria": "impressora",
-        "descricao": "não imprime"
-    },
-    {
-        "id": 3,
-        "nome": "Pedro",
-        "nivel": "user",
-        "equipamento": "Impressora",
-        "categoria": "impressora",
-        "descricao": "falta tinta"
-    },
-    {
-        "id": 3,
-        "nome": "Pedro",
-        "nivel": "user",
-        "equipamento": "Roteador",
-        "categoria": "rede",
-        "descricao": "O roteador não funciona"
-    }
+  {
+    "id": 1,
+    "nome": "Andelson",
+    "nivel": "admin",
+    "equipamento": "Notebook",
+    "categoria": "hardware",
+    "descricao": "Queimou a tela o teclado n\u00e3o funciona",
+    "status": "em andamento",
+    "preco": "250"
+  },
+  {
+    "id": 1,
+    "nome": "Andelson",
+    "nivel": "admin",
+    "equipamento": "PC",
+    "categoria": "software",
+    "descricao": "n\u00e3o liga",
+    "status": "aberto",
+    "preco": ""
+  },
+  {
+    "id": 1,
+    "nome": "Andelson",
+    "nivel": "admin",
+    "equipamento": "Impressora",
+    "categoria": "impressora",
+    "descricao": "n\u00e3o imprime",
+    "status": "aberto",
+    "preco": ""
+  },
+  {
+    "id": 3,
+    "nome": "Pedro",
+    "nivel": "user",
+    "equipamento": "Impressora",
+    "categoria": "impressora",
+    "descricao": "falta tinta",
+    "status": "aberto",
+    "preco": ""
+  },
+  {
+    "id": 3,
+    "nome": "Pedro",
+    "nivel": "user",
+    "equipamento": "Roteador",
+    "categoria": "rede",
+    "descricao": "O roteador n\u00e3o funciona",
+    "status": "aberto",
+    "preco": ""
+  },
+  {
+    "id": 6,
+    "nome": "Andelson",
+    "equipamento": "Internet",
+    "categoria": "rede",
+    "descricao": "Problemas no cabo, sem internet",
+    "status": "aberto",
+    "preco": ""
+  }
 ]

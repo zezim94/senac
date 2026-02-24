@@ -38,54 +38,59 @@ $chamados = json_decode($arquivos, true);
 
           <div class="card-body">
 
-            <?php
+            <div class="row">
 
-            foreach ($chamados as $chamado):
-              $ehDono = (int) $_SESSION['id'] === (int) $chamado['id'];
-              $ehAdmin = $_SESSION['nivel'] === 'admin' || $_SESSION['nivel'] === 'tecnico';
+              <?php foreach ($chamados as $chamado):
 
-              if (!$ehDono && !$ehAdmin) {
-                continue;
-              }
+                $ehDono = (int) $_SESSION['id'] === (int) $chamado['id'];
+                $ehAdmin = $_SESSION['nivel'] === 'admin' || $_SESSION['nivel'] === 'tecnico';
 
-              ?>
+                if (!$ehDono && !$ehAdmin) {
+                  continue;
+                }
+                ?>
 
-              <div class="card mb-3 bg-light">
-                <div class="card-body">
-                  <h4 class="card-title"><?= $chamado['nome'] ?></h4>
-                  <h5 class="card-title"><?= $chamado['equipamento'] ?></h5>
-                  <h6 class="card-subtitle mb-2 text-muted"><?= $chamado['categoria'] ?></h6>
-                  <p class="card-text"><?= $chamado['descricao'] ?></p>
+                <div class="col-md-4 mb-4">
+                  <div class="card bg-light h-100">
+                    <div class="card-body">
 
-                  <form action="processaEditarChamado.php" method="POST">
-                    <input type="hidden" name="id" value="<?= $chamado['id'] ?>">
-                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editarChamadoModal"
-                      data-id="<?= $chamado['id'] ?>" data-nome="<?= htmlspecialchars($chamado['nome'], ENT_QUOTES) ?>"
-                      data-equipamento="<?= htmlspecialchars($chamado['equipamento'], ENT_QUOTES) ?>"
-                      data-categoria="<?= htmlspecialchars($chamado['categoria'], ENT_QUOTES) ?>"
-                      data-descricao="<?= htmlspecialchars($chamado['descricao'], ENT_QUOTES) ?>">
-                      Editar
-                    </button>
-                  </form>
+                      <h5 class="card-title"><?= $chamado['nome'] ?></h5>
+                      <h6><?= $chamado['equipamento'] ?></h6>
+                      <small class="text-muted"><?= $chamado['categoria'] ?></small>
 
-                  <form action="processaExcluirChamado.php" method="POST">
-                    <input type="hidden" name="id" value="<?= $chamado['id'] ?>">
-                    <button type="submit" class="btn btn-danger">Excluir</button>
-                  </form>
+                      <p class="mt-2"><?= $chamado['descricao'] ?></p>
 
+                      <p><strong>Status:</strong> <?= $chamado['status'] ?></p>
+
+                      <?php if ($chamado['preco'] !== ''): ?>
+                        <p><strong>Preço:</strong> R$ <?= $chamado['preco'] ?></p>
+                      <?php endif; ?>
+
+                      <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                        data-target="#editarChamadoModal" data-id="<?= $chamado['id'] ?>">
+                        Editar
+                      </button>
+
+                      <form action="processaExcluirChamado.php" method="POST" class="d-inline">
+                        <input type="hidden" name="id" value="<?= $chamado['id'] ?>">
+                        <button type="submit" class="btn btn-danger btn-sm">
+                          Excluir
+                        </button>
+                      </form>
+
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-            <?php endforeach; ?>
+              <?php endforeach; ?>
 
-            <div class="row mt-5">
-              <div class="col-6">
-                <a href="home.php" class="btn btn-lg btn-warning btn-block">Voltar</a>
-              </div>
             </div>
+
           </div>
+
         </div>
       </div>
+
     </div>
   </div>
   <!-- Modal -->
@@ -123,6 +128,20 @@ $chamados = json_decode($arquivos, true);
               <textarea name="descricao" class="form-control" id="chamadoDescricao" required></textarea>
             </div>
 
+            <div class="form-group">
+              <label>Status</label>
+              <select name="status" class="form-control" id="chamadoStatus" required>
+                <option value="aberto">Aberto</option>
+                <option value="em andamento">Em Andamento</option>
+                <option value="concluido">Concluído</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Preço</label>
+              <input type="text" name="preco" class="form-control" id="chamadoPreco" required>
+            </div>
+
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -133,27 +152,34 @@ $chamados = json_decode($arquivos, true);
     </div>
   </div>
 
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-<script>
-$('#editarChamadoModal').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget); // botão que abriu o modal
-    var id = button.data('id');
-    var nome = button.data('nome');
-    var equipamento = button.data('equipamento');
-    var categoria = button.data('categoria');
-    var descricao = button.data('descricao');
+  <script>
+    $('#editarChamadoModal').on('show.bs.modal', function (event) {
 
-    var modal = $(this);
-    modal.find('#chamadoId').val(id);
-    modal.find('#chamadoNome').val(nome);
-    modal.find('#chamadoEquipamento').val(equipamento);
-    modal.find('#chamadoCategoria').val(categoria);
-    modal.find('#chamadoDescricao').val(descricao);
-});
-</script>
+      var button = $(event.relatedTarget);
+      var id = button.data('id');
+
+      $.get('buscarChamado.php', { id: id }, function (data) {
+
+        var chamado = JSON.parse(data);
+
+        if (chamado) {
+          $('#chamadoId').val(chamado.id);
+          $('#chamadoNome').val(chamado.nome);
+          $('#chamadoEquipamento').val(chamado.equipamento);
+          $('#chamadoCategoria').val(chamado.categoria);
+          $('#chamadoDescricao').val(chamado.descricao);
+          $('#chamadoStatus').val(chamado.status);
+          $('#chamadoPreco').val(chamado.preco);
+        }
+
+      });
+
+    });
+  </script>
 
 </body>
 
