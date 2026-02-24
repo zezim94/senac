@@ -1,0 +1,5 @@
+1 - Andelson - admin - Notebook - hardware - Queimou a tela
+1 - Andelson - admin - PC - software - não liga
+1 - Andelson - admin - Impressora - impressora - não imprime
+1 - Andelson - admin -  - criação_usuario - 
+3 - Pedro - user - Roteador - rede - O roteador não funciona

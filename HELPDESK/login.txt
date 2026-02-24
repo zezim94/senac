@@ -1,0 +1,5 @@
+1;Andelson;admin;andelsonascimento@gmail.com;1234
+2;Sarah;user;sarah@gmail.com;1234
+3;Pedro;user;pedro@gmail.com;1234
+4;Maria;user;maria@gmail.com;1234
+5;Agatha;admin;agatha@admin.com;1234
