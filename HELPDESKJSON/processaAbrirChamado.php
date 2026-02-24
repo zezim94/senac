@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $chamados = json_decode($arquivo, true);
 
     $chamado = array(
-        'id' => count($chamados) + 1,
+        'id' => uniqid(),
         'nome' => $nomeUser,
         'equipamento' => $titulo,
         'categoria' => $categoria,
