@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "nome": "Andelson",
+        "nivel": "admin",
+        "equipamento": "Notebook",
+        "categoria": "hardware",
+        "descricao": "Queimou a tela"
+    },
+    {
+        "id": 1,
+        "nome": "Andelson",
+        "nivel": "admin",
+        "equipamento": "PC",
+        "categoria": "software",
+        "descricao": "não liga"
+    },
+    {
+        "id": 1,
+        "nome": "Andelson",
+        "nivel": "admin",
+        "equipamento": "Impressora",
+        "categoria": "impressora",
+        "descricao": "não imprime"
+    },
+    {
+        "id": 3,
+        "nome": "Pedro",
+        "nivel": "user",
+        "equipamento": "Impressora",
+        "categoria": "impressora",
+        "descricao": "falta tinta"
+    },
+    {
+        "id": 3,
+        "nome": "Pedro",
+        "nivel": "user",
+        "equipamento": "Roteador",
+        "categoria": "rede",
+        "descricao": "O roteador não funciona"
+    }
+]
