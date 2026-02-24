@@ -1,5 +1,11 @@
 <?php
 include 'verificaLogin.php';
+$arquivo = file_get_contents('arquivo.JSON');
+$chamados = json_decode($arquivo, true);
+
+$usuarios = file_get_contents('login.JSON');
+$user = json_decode($usuarios, true);
+
 ?>
 
 <html>
@@ -16,6 +22,21 @@ include 'verificaLogin.php';
       padding: 30px 0 0 0;
       width: 100%;
       margin: 0 auto;
+    }
+
+    span {
+      position: absolute;
+      right: 130px;
+      top: -10px;
+      background-color: red;
+      color: white;
+      font-weight: bold;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   </style>
 </head>
@@ -46,6 +67,11 @@ include 'verificaLogin.php';
 
               <div class="col-3 d-flex justify-content-center">
                 <a href="consultar_chamado.php">
+
+                  <?php if ($_SESSION['nivel'] == 'admin' || $_SESSION['nivel'] == 'tecnico'): ?>
+                    <span><?= count($chamados) ?></span>
+                  <?php endif; ?>
+
                   <img src="img/formulario_consultar_chamado.png" width="70" height="70">
                 </a>
               </div>
@@ -61,6 +87,7 @@ include 'verificaLogin.php';
               <?php if ($_SESSION['nivel'] == 'admin') { ?>
                 <div class="col-3 d-flex justify-content-center">
                   <a href="usuarios.php">
+                    <?php echo "<span>" . count($user) . "</span>" ?>
                     <img src="img/user.png" width="70" height="70">
                   </a>
                 </div>

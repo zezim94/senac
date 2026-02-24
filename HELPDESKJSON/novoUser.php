@@ -57,6 +57,7 @@ include 'verificaLogin.php';
                                         <select name="nivel" class="form-control">
                                             <option value="user">Usuário</option>
                                             <option value="admin">Admin</option>
+                                            <option value="tecnico">Técnico</option>
                                         </select>
                                     </div>
 

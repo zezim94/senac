@@ -42,7 +42,7 @@ $chamados = json_decode($arquivos, true);
 
             foreach ($chamados as $chamado):
               $ehDono = (int) $_SESSION['id'] === (int) $chamado['id'];
-              $ehAdmin = $_SESSION['nivel'] === 'admin';
+              $ehAdmin = $_SESSION['nivel'] === 'admin' || $_SESSION['nivel'] === 'tecnico';
 
               if (!$ehDono && !$ehAdmin) {
                 continue;

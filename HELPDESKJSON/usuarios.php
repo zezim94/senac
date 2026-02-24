@@ -54,6 +54,20 @@ $usuarios = json_decode($arquivo, true);
 
                                 foreach ($usuarios as $user):
 
+                                    $nivel = $user['Nivel'];
+
+                                    switch ($nivel) {
+                                        case 'admin':
+                                            $nivel = 'Administrador';
+                                            break;
+                                        case 'user':
+                                            $nivel = 'Usuário';
+                                            break;
+                                        case 'tecnico':
+                                            $nivel = 'Técnico';
+                                            break;
+                                    }
+
                             ?>
 
                             <tr>
@@ -61,7 +75,7 @@ $usuarios = json_decode($arquivo, true);
                                 <td><?= $user['Nome'] ?></td>
                                 <td><?= $user['Email'] ?></td>
                                 <td><?= $user['Senha'] ?></td>
-                                <td><?= $user['Nivel'] ?></td>
+                                <td><?= $nivel ?></td>
                                 <td>
                                     <a href="processaEditarUser.php?id=<?= $user['ID'] ?>" class="btn btn-warning btn-sm">Editar</a>
                                     <a href="processaExcluirUser.php?id=<?= $user['ID'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir <?= $user['Nome'] ?>?')">Excluir</a>

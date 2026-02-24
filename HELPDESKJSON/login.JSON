@@ -33,5 +33,12 @@
         "Email": "stephaniemoura285@gmail.com",
         "Senha": "4321",
         "Nivel": "admin"
+    },
+    {
+        "ID": 7,
+        "Nome": "Andelson Jose Do Nascimento",
+        "Email": "ANDELSON.NASCIMENTO@YAHOO.COM.BR",
+        "Senha": "3214",
+        "Nivel": "tecnico"
     }
 ]
