@@ -17,19 +17,20 @@ $matriz = [
     <title>EX1 - Matriz 4x4</title>
 
     <style>
-        *{
+        * {
             margin: 0;
             padding: 0;
         }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: Arial;
             display: flex;
             flex-direction: column;
             align-items: center;
             margin-top: 50px;
         }
 
-        h1{
+        h1 {
             margin-bottom: 30px;
         }
 
@@ -38,14 +39,19 @@ $matriz = [
         }
 
         td {
-            border: 2px solid black;
+            border: 2px solid #fff;
             width: 60px;
             height: 60px;
+            border-radius: 10px;
             text-align: center;
-            font-size: 18px;         
+            font-size: 18px;
             font-weight: bold;
             background-color: #3465ecff;
             color: #ffffff;
+        }
+
+        td:hover {
+            background-color: #0c37adff;
         }
     </style>
 </head>
@@ -59,7 +65,7 @@ $matriz = [
         <?php
         for ($i = 0; $i < 4; $i++) {
             echo "<tr>";
-        
+
             for ($j = 0; $j < 4; $j++) {
                 echo "<td>" . $matriz[$i][$j] . "</td>";
             }
