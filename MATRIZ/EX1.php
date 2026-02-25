@@ -14,9 +14,25 @@ $matriz = [
 
 <head>
     <meta charset="UTF-8">
-    <title>Matriz 4x4</title>
+    <title>EX1 - Matriz 4x4</title>
 
     <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        h1{
+            margin-bottom: 30px;
+        }
+
         table {
             border-collapse: collapse;
         }
@@ -28,6 +44,8 @@ $matriz = [
             text-align: center;
             font-size: 18px;         
             font-weight: bold;
+            background-color: #3465ecff;
+            color: #ffffff;
         }
     </style>
 </head>
@@ -40,13 +58,13 @@ $matriz = [
 
         <?php
         for ($i = 0; $i < 4; $i++) {
-            echo "<tr>"; // inicia linha da tabela
+            echo "<tr>";
         
             for ($j = 0; $j < 4; $j++) {
-                echo "<td>" . $matriz[$i][$j] . "</td>"; // cria célula
+                echo "<td>" . $matriz[$i][$j] . "</td>";
             }
 
-            echo "</tr>"; // fecha linha
+            echo "</tr>";
         }
         ?>
 

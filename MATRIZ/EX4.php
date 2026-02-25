@@ -17,17 +17,35 @@ $matriz = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>EX4 - Matriz 6x2</title>
+    <style>
+        body {
+            font-family: Arial;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        p {
+            font-size: 18px;
+        }
+    </style>
 </head>
 
 <body>
 
-    <h1>Matriz</h1>
+    <h1>Matriz 6x2</h1>
 
     <?php
     $maiorCinco = 0;
-    for ($i = 0; $i < count($matriz); $i++) {          // percorre linhas
-        for ($j = 0; $j < count($matriz[$i]); $j++) {  // percorre colunas
+    for ($i = 0; $i < count($matriz); $i++) {
+        for ($j = 0; $j < count($matriz[$i]); $j++) {
             echo $matriz[$i][$j] . "&nbsp;&nbsp;&nbsp;&nbsp;";
             if ($matriz[$i][$j] > 5) {
                 $maiorCinco++;
@@ -36,7 +54,7 @@ $matriz = [
         echo "<br>";
     }
 
-    echo "Quantidade de elementos maiores que 5: " . $maiorCinco . "<br>";
+    echo "<p>Quantidade de elementos maiores que 5: " . $maiorCinco . "</p>";
     ?>
 
 </body>
