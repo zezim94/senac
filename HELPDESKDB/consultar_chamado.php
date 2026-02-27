@@ -33,9 +33,9 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
   <?php include 'nav.php'; ?>
 
   <div class="container">
-    
+
     <div class="row">
-      
+
       <div class="card-consultar-chamado">
         <a href="home.php" type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</a>
         <div class="card">
@@ -43,7 +43,7 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
           if (isset($_GET['message']) && $_GET['message'] == 'success'): ?>
 
             <div class="alert alert-success" role="alert">
-              Chamado atualizado com sucesso !
+              Chamado atualizado com sucesso!
             </div>
 
             <?php
@@ -58,6 +58,29 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
             <?php
           endif;
           unset($_GET['message']);
+          ?>
+
+
+
+          <?php
+          if (isset($_GET['message1']) && $_GET['message1'] == 'success1'): ?>
+
+            <div class="alert alert-success" role="alert">
+              Chamado excluido com sucesso!
+            </div>
+
+            <?php
+          elseif (isset($_GET['message1']) && $_GET['message1'] == 'error1'):
+            unset($_GET['message1']);
+            ?>
+
+            <div class="alert alert-danger" role="alert">
+              Erro ao excluir o chamado!
+            </div>
+
+            <?php
+          endif;
+          unset($_GET['message1']);
           ?>
           <div class="card-header">
             Consulta de chamado
@@ -98,10 +121,8 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
                         Editar
                       </button>
 
-
-
-                      <button type="submit" class="btn btn-danger btn-sm" data-toggle="modal"
-                        data-target="#excluirChamadoModal">
+                      <button type="button" class="btn btn-danger" data-toggle="modal"
+                        data-target="#excluirChamadoModal<?= $chamado['id'] ?>">
                         Excluir
                       </button>
 
@@ -184,8 +205,8 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
     </div>
   </div>
 
-  <div class="modal fade" id="excluirChamadoModal" tabindex="-1" role="dialog" aria-labelledby="excluirChamadoLabel"
-    aria-hidden="true">
+  <div class="modal fade" id="excluirChamadoModal<?= $chamado['id'] ?>" tabindex="-1" role="dialog"
+    aria-labelledby="excluirChamadoLabel<?= $chamado['id'] ?>" aria-hidden="true"> aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <form action="processaExcluirChamado.php" method="POST">
@@ -206,8 +227,6 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-
 
 </body>
 

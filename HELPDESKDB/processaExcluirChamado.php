@@ -13,9 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     mysqli_stmt_bind_param($stmt,'i', $id);
 
       if (mysqli_stmt_execute($stmt)) {
-        header('Location: consultar_chamado.php?message=success');
+        header('Location: consultar_chamado.php?message1=success1');
     } else {
-        header('Location: consultar_chamado.php?message=error');
+        header('Location: consultar_chamado.php?message1=error1');
 
     }
 
