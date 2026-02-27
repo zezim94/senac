@@ -1,11 +1,37 @@
 <?php
 require_once 'verificaLogin.php';
-
 require_once 'conexao.php';
 
-$sql = "SELECT chamados.*, user.nome FROM chamados join user on chamados.userId = user.id";
+$busca = trim($_GET['busca'] ?? '');
+$statusOptions = ['aberto', 'em andamento', 'concluido'];
 
-$chamados = mysqli_query($conn, $sql);
+if ($busca) {
+  $buscaParam = "%$busca%";
+  $sql = "SELECT chamados.*, user.nome 
+            FROM chamados 
+            JOIN user ON chamados.userId = user.id
+            WHERE user.nome LIKE ? OR chamados.titulo LIKE ? OR chamados.categoria LIKE ?";
+
+  $stmt = mysqli_prepare($conn, $sql);
+  if (!$stmt)
+    die("Erro no prepare: " . mysqli_error($conn));
+
+  mysqli_stmt_bind_param($stmt, "sss", $buscaParam, $buscaParam, $buscaParam);
+  mysqli_stmt_execute($stmt);
+  $result = mysqli_stmt_get_result($stmt);
+  $chamados = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+} else {
+  $sql = "SELECT chamados.*, user.nome 
+            FROM chamados 
+            JOIN user ON chamados.userId = user.id";
+
+  $result = mysqli_query($conn, $sql);
+  if (!$result)
+    die("Erro na query: " . mysqli_error($conn));
+
+  $chamados = mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
 
 $statusOptions = ['aberto', 'em andamento', 'concluido'];
 ?>
@@ -85,19 +111,27 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
           <div class="card-header">
             Consulta de chamado
           </div>
+          <form action="consultar_chamado.php" method="GET">
+
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Pesquisa</label>
+              <input type="text" name="busca" class="form-control"
+                value="<?= htmlspecialchars($_GET['busca'] ?? '') ?>">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Buscar</button>
+          </form>
 
           <div class="card-body">
 
             <div class="row">
 
               <?php foreach ($chamados as $chamado):
-
-                $ehDono = (int) $_SESSION['id'] === (int) $chamado['id'];
+                $ehDono = (int) $_SESSION['id'] === (int) $chamado['userId'];
                 $ehAdmin = $_SESSION['nivel'] === 'admin' || $_SESSION['nivel'] === 'tecnico';
 
-                if (!$ehDono && !$ehAdmin) {
+                if (!$ehDono && !$ehAdmin)
                   continue;
-                }
                 ?>
 
                 <div class="col-md-4 mb-4">
@@ -110,16 +144,21 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
 
                       <p class="mt-2"><?= $chamado['descricao'] ?></p>
 
+
+
                       <p><strong>Status:</strong> <?= $chamado['status'] ?? '' ?></p>
 
                       <?php if ($chamado['preco'] !== null): ?>
                         <p><strong>Preço:</strong> R$ <?= $chamado['preco'] ?></p>
                       <?php endif; ?>
 
+
+
                       <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
                         data-target="#editarChamadoModal" data-id="<?= $chamado['id'] ?>">
                         Editar
                       </button>
+
 
                       <button type="button" class="btn btn-danger" data-toggle="modal"
                         data-target="#excluirChamadoModal<?= $chamado['id'] ?>">
@@ -159,7 +198,7 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
 
             <div class="form-group">
               <label>Nome</label>
-              <input type="text" name="nome" class="form-control" value="<?= $chamado['nome'] ?>" required>
+              <input type="text" name="nome" class="form-control" value="<?= $chamado['nome'] ?>" required readonly>
             </div>
 
             <div class="form-group">
@@ -177,23 +216,31 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
               <textarea name="descricao" class="form-control" required><?= $chamado['descricao'] ?></textarea>
             </div>
 
-            <div class="form-group">
-              <label>Status</label>
-              <?php $statusAtual = $chamado['status']; ?>
-              <select name="status" class="form-control">
-                <?php foreach ($statusOptions as $status): ?>
-                  <option value="<?= $status ?>" <?= $statusAtual === $status ? 'selected' : '' ?>>
-                    <?= ucfirst($status) ?>
-                  </option>
-                <?php endforeach; ?>
-              </select>
-            </div>
+            <?php
+            if ($_SESSION['nivel'] === 'admin' || $_SESSION['nivel'] === 'tecnico'): ?>
 
-            <div class="form-group">
-              <label>Preço</label>
-              <input type="text" name="preco" class="form-control" id="chamadoPreco" value="<?= $chamado['preco'] ?>"
-                required>
-            </div>
+              <div class="form-group">
+                <label>Status</label>
+                <?php $statusAtual = $chamado['status']; ?>
+                <select name="status" class="form-control">
+                  <?php foreach ($statusOptions as $status): ?>
+                    <option value="<?= $status ?>" <?= $statusAtual === $status ? 'selected' : '' ?>>
+                      <?= ucfirst($status) ?>
+                    </option>
+                  <?php endforeach; ?>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Preço</label>
+                <input type="text" name="preco" class="form-control" id="chamadoPreco" value="<?= $chamado['preco'] ?>"
+                  required>
+              </div>
+
+              <?php
+
+            endif;
+            ?>
 
           </div>
           <div class="modal-footer">

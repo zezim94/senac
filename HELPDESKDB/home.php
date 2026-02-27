@@ -29,19 +29,25 @@ $totalChamado = $row2['total'];
       margin: 0 auto;
     }
 
+    .icon-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
     span {
       position: absolute;
-      right: 130px;
-      top: -10px;
+      top: -8px;
+      right: -8px;
       background-color: red;
       color: white;
       font-weight: bold;
       border-radius: 50%;
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       display: flex;
       justify-content: center;
       align-items: center;
+      font-size: 12px;
     }
   </style>
 </head>
@@ -71,7 +77,7 @@ $totalChamado = $row2['total'];
               </div>
 
               <div class="col-3 d-flex justify-content-center">
-                <a href="consultar_chamado.php">
+                <a href="consultar_chamado.php" class="icon-wrapper">
 
                   <?php if ($_SESSION['nivel'] == 'admin' || $_SESSION['nivel'] == 'tecnico'): ?>
                     <span><?= $totalChamado ?></span>
@@ -91,7 +97,7 @@ $totalChamado = $row2['total'];
 
               <?php if ($_SESSION['nivel'] == 'admin') { ?>
                 <div class="col-3 d-flex justify-content-center">
-                  <a href="usuarios.php">
+                  <a href="usuarios.php" class="icon-wrapper">
                     <?php echo "<span>" . $totalUser . "</span>" ?>
                     <img src="img/user.png" width="70" height="70">
                   </a>
