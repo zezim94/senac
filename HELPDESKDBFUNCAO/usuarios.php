@@ -2,6 +2,8 @@
 require_once 'verificaLogin.php';
 require_once 'conexao.php';
 
+$conn = conexao();
+
 $busca = trim($_GET['busca'] ?? '');
 
 if ($busca) {

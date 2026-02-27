@@ -61,71 +61,39 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
   <?php include 'nav.php'; ?>
 
   <div class="container">
-
     <div class="row">
-
       <div class="card-consultar-chamado">
         <a href="home.php" type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</a>
         <div class="card">
-          <?php
-          if (isset($_GET['message']) && $_GET['message'] == 'success'): ?>
 
-            <div class="alert alert-success" role="alert">
-              Chamado atualizado com sucesso!
-            </div>
+          <!-- Mensagens de sucesso/erro -->
+          <?php if (isset($_GET['message'])): ?>
+            <?php if ($_GET['message'] == 'success'): ?>
+              <div class="alert alert-success" role="alert">Chamado atualizado com sucesso!</div>
+            <?php elseif ($_GET['message'] == 'error'): ?>
+              <div class="alert alert-danger" role="alert">Erro ao atualizar o chamado!</div>
+            <?php endif; ?>
+          <?php endif; ?>
 
-            <?php
-          elseif (isset($_GET['message']) && $_GET['message'] == 'error'):
-            unset($_GET['message']);
-            ?>
+          <?php if (isset($_GET['message1'])): ?>
+            <?php if ($_GET['message1'] == 'success1'): ?>
+              <div class="alert alert-success" role="alert">Chamado excluído com sucesso!</div>
+            <?php elseif ($_GET['message1'] == 'error1'): ?>
+              <div class="alert alert-danger" role="alert">Erro ao excluir o chamado!</div>
+            <?php endif; ?>
+          <?php endif; ?>
 
-            <div class="alert alert-danger" role="alert">
-              Erro ao atualizar o chamado!
-            </div>
-
-            <?php
-          endif;
-          unset($_GET['message']);
-          ?>
-
-
-
-          <?php
-          if (isset($_GET['message1']) && $_GET['message1'] == 'success1'): ?>
-
-            <div class="alert alert-success" role="alert">
-              Chamado excluido com sucesso!
-            </div>
-
-            <?php
-          elseif (isset($_GET['message1']) && $_GET['message1'] == 'error1'):
-            unset($_GET['message1']);
-            ?>
-
-            <div class="alert alert-danger" role="alert">
-              Erro ao excluir o chamado!
-            </div>
-
-            <?php
-          endif;
-          unset($_GET['message1']);
-          ?>
-          <div class="card-header">
-            Consulta de chamado
-          </div>
+          <div class="card-header">Consulta de chamado</div>
           <form action="consultar_chamado.php" method="GET">
-
             <div class="mb-3">
-              <label for="exampleInputPassword1" class="form-label">Pesquisa</label>
+              <label class="form-label">Pesquisa</label>
               <input type="text" name="busca" class="form-control"
                 value="<?= htmlspecialchars($_GET['busca'] ?? '') ?>">
             </div>
-
             <button type="submit" class="btn btn-primary">Buscar</button>
           </form>
 
           <div class="card-body">
-
             <div class="row">
 
               <?php foreach ($chamados as $chamado):
@@ -139,34 +107,31 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
                 <div class="col-md-4 mb-4">
                   <div class="card bg-light h-100">
                     <div class="card-body">
-
                       <h5 class="card-title"><?= $chamado['nome'] ?></h5>
                       <h6><?= $chamado['titulo'] ?></h6>
                       <small class="text-muted"><?= $chamado['categoria'] ?></small>
-
                       <p class="mt-2"><?= $chamado['descricao'] ?></p>
-
-
-
                       <p><strong>Status:</strong> <?= $chamado['status'] ?? '' ?></p>
-
                       <?php if ($chamado['preco'] !== null): ?>
                         <p><strong>Preço:</strong> R$ <?= $chamado['preco'] ?></p>
                       <?php endif; ?>
 
-
-
+                      <!-- Botão Editar -->
                       <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
-                        data-target="#editarChamadoModal" data-id="<?= $chamado['id'] ?>">
+                        data-target="#editarChamadoModal" data-id="<?= $chamado['id'] ?>"
+                        data-nome="<?= htmlspecialchars($chamado['nome']) ?>"
+                        data-titulo="<?= htmlspecialchars($chamado['titulo']) ?>"
+                        data-categoria="<?= htmlspecialchars($chamado['categoria']) ?>"
+                        data-descricao="<?= htmlspecialchars($chamado['descricao']) ?>"
+                        data-status="<?= $chamado['status'] ?>" data-preco="<?= $chamado['preco'] ?>">
                         Editar
                       </button>
 
-
+                      <!-- Botão Excluir (mantido individual) -->
                       <button type="button" class="btn btn-danger" data-toggle="modal"
                         data-target="#excluirChamadoModal<?= $chamado['id'] ?>">
                         Excluir
                       </button>
-
 
                     </div>
                   </div>
@@ -175,15 +140,14 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
               <?php endforeach; ?>
 
             </div>
-
           </div>
 
         </div>
       </div>
-
     </div>
   </div>
-  <!-- Modal -->
+
+  <!-- Modal único de edição -->
   <div class="modal fade" id="editarChamadoModal" tabindex="-1" role="dialog" aria-labelledby="editarChamadoLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -196,53 +160,43 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
             </button>
           </div>
           <div class="modal-body">
-            <input type="hidden" name="id" value="<?= $chamado['id'] ?>">
+            <input type="hidden" name="id" id="modalChamadoId">
 
             <div class="form-group">
               <label>Nome</label>
-              <input type="text" name="nome" class="form-control" value="<?= $chamado['nome'] ?>" required readonly>
+              <input type="text" name="nome" class="form-control" id="modalChamadoNome" required readonly>
             </div>
 
             <div class="form-group">
               <label>Equipamento</label>
-              <input type="text" name="titulo" class="form-control" value="<?= $chamado['titulo'] ?>" required>
+              <input type="text" name="titulo" class="form-control" id="modalChamadoTitulo" required>
             </div>
 
             <div class="form-group">
               <label>Categoria</label>
-              <input type="text" name="categoria" class="form-control" value="<?= $chamado['categoria'] ?>" required>
+              <input type="text" name="categoria" class="form-control" id="modalChamadoCategoria" required>
             </div>
 
             <div class="form-group">
               <label>Descrição</label>
-              <textarea name="descricao" class="form-control" required><?= $chamado['descricao'] ?></textarea>
+              <textarea name="descricao" class="form-control" id="modalChamadoDescricao" required></textarea>
             </div>
 
-            <?php
-            if ($_SESSION['nivel'] === 'admin' || $_SESSION['nivel'] === 'tecnico'): ?>
-
+            <?php if ($_SESSION['nivel'] === 'admin' || $_SESSION['nivel'] === 'tecnico'): ?>
               <div class="form-group">
                 <label>Status</label>
-                <?php $statusAtual = $chamado['status']; ?>
-                <select name="status" class="form-control">
+                <select name="status" class="form-control" id="modalChamadoStatus">
                   <?php foreach ($statusOptions as $status): ?>
-                    <option value="<?= $status ?>" <?= $statusAtual === $status ? 'selected' : '' ?>>
-                      <?= ucfirst($status) ?>
-                    </option>
+                    <option value="<?= $status ?>"><?= ucfirst($status) ?></option>
                   <?php endforeach; ?>
                 </select>
               </div>
 
               <div class="form-group">
                 <label>Preço</label>
-                <input type="text" name="preco" class="form-control" id="chamadoPreco" value="<?= $chamado['preco'] ?>"
-                  required>
+                <input type="text" name="preco" class="form-control" id="modalChamadoPreco" required>
               </div>
-
-              <?php
-
-            endif;
-            ?>
+            <?php endif; ?>
 
           </div>
           <div class="modal-footer">
@@ -254,29 +208,40 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
     </div>
   </div>
 
-  <div class="modal fade" id="excluirChamadoModal<?= $chamado['id'] ?>" tabindex="-1" role="dialog"
-    aria-labelledby="excluirChamadoLabel<?= $chamado['id'] ?>" aria-hidden="true"> aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <form action="processaExcluirChamado.php" method="POST">
-          <input type="hidden" name="id" value="<?= $chamado['id'] ?>">
-
-          <div class="alert alert-danger" role="alert">
-            Tem certeza que deseja excluir esse chamado ?
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-danger">Confirmar exclusão</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
+  <!-- jQuery, Popper e Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
+  <!-- Script para popular o modal -->
+  <script>
+    $(document).ready(function () {
+      $('#editarChamadoModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // botão que abriu o modal
+
+        // Pega os dados do botão
+        var id = button.data('id');
+        var nome = button.data('nome');
+        var titulo = button.data('titulo');
+        var categoria = button.data('categoria');
+        var descricao = button.data('descricao');
+        var status = button.data('status');
+        var preco = button.data('preco');
+
+        // Popula os campos do modal
+        $('#modalChamadoId').val(id);
+        $('#modalChamadoNome').val(nome);
+        $('#modalChamadoTitulo').val(titulo);
+        $('#modalChamadoCategoria').val(categoria);
+        $('#modalChamadoDescricao').val(descricao);
+
+        <?php if ($_SESSION['nivel'] === 'admin' || $_SESSION['nivel'] === 'tecnico'): ?>
+          $('#modalChamadoStatus').val(status);
+          $('#modalChamadoPreco').val(preco);
+        <?php endif; ?>
+      });
+    });
+  </script>
 </body>
 
 </html>

@@ -2,6 +2,8 @@
 require_once 'verificaLogin.php';
 require_once 'conexao.php';
 
+$conn = conexao();
+
 $result = mysqli_query($conn, "SELECT COUNT(*) AS total FROM user");
 $row = mysqli_fetch_assoc($result);
 $totalUser = $row['total'];
