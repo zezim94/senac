@@ -2,7 +2,7 @@
 require_once 'verificaLogin.php';
 require_once 'conexao.php';
 
-
+$conn = conexao();
 
 $busca = trim($_GET['busca'] ?? '');
 $statusOptions = ['aberto', 'em andamento', 'concluido'];
