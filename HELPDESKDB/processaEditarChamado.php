@@ -1,38 +1,32 @@
 <?php
 include 'verificaLogin.php';
+require_once 'conexao.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $id = (int)$_POST['id'];
-    $nome = trim($_POST['nome']);
-    $equipamento = trim($_POST['equipamento']);
+    $id = (int) $_POST['id'];
+    $titulo = trim($_POST['titulo']);
     $categoria = trim($_POST['categoria']);
     $descricao = trim($_POST['descricao']);
     $status = trim($_POST['status']);
-    $preco = trim($_POST['preco']);
+    $preco = str_replace(',', '.', $_POST['preco']);
+    $preco = (float) $preco;
 
-    // Ler JSON
-    $arquivo = file_get_contents('arquivo.JSON');
-    $chamados = json_decode($arquivo, true);
+    $sql = 'UPDATE chamados set titulo = ?, categoria = ?, descricao = ?, status = ?, preco = ? WHERE id = ?';
 
-    // Atualizar chamado
-    foreach ($chamados as &$chamado) {
-        if ((int)$chamado['id'] === $id) {
-            $chamado['nome'] = $nome;
-            $chamado['equipamento'] = $equipamento;
-            $chamado['categoria'] = $categoria;
-            $chamado['descricao'] = $descricao;
-            $chamado['status'] = $status;
-            $chamado['preco'] = $preco;
-            break;
-        }
+
+    $stmt = mysqli_prepare($conn, $sql);
+
+    mysqli_stmt_bind_param($stmt, 'ssssdi', $titulo, $categoria, $descricao, $status, $preco, $id);
+
+    if (mysqli_stmt_execute($stmt)) {
+        header('Location: consultar_chamado.php?message=success');
+    } else {
+        header('Location: consultar_chamado.php?message=error');
+
     }
 
-    // Salvar de volta
-    file_put_contents('arquivo.JSON', json_encode($chamados, JSON_PRETTY_PRINT));
 
-    header('Location: consultar_chamado.php'); // volta para a lista
-    exit;
 } else {
     header('Location: consultar_chamado.php');
     exit;

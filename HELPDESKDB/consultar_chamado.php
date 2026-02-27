@@ -6,6 +6,8 @@ require_once 'conexao.php';
 $sql = "SELECT chamados.*, user.nome FROM chamados join user on chamados.userId = user.id";
 
 $chamados = mysqli_query($conn, $sql);
+
+$statusOptions = ['aberto', 'em andamento', 'concluido'];
 ?>
 
 <html>
@@ -31,10 +33,32 @@ $chamados = mysqli_query($conn, $sql);
   <?php include 'nav.php'; ?>
 
   <div class="container">
+    
     <div class="row">
-
+      
       <div class="card-consultar-chamado">
+        <a href="home.php" type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</a>
         <div class="card">
+          <?php
+          if (isset($_GET['message']) && $_GET['message'] == 'success'): ?>
+
+            <div class="alert alert-success" role="alert">
+              Chamado atualizado com sucesso !
+            </div>
+
+            <?php
+          elseif (isset($_GET['message']) && $_GET['message'] == 'error'):
+            unset($_GET['message']);
+            ?>
+
+            <div class="alert alert-danger" role="alert">
+              Erro ao atualizar o chamado!
+            </div>
+
+            <?php
+          endif;
+          unset($_GET['message']);
+          ?>
           <div class="card-header">
             Consulta de chamado
           </div>
@@ -74,12 +98,13 @@ $chamados = mysqli_query($conn, $sql);
                         Editar
                       </button>
 
-                      <form action="processaExcluirChamado.php" method="POST" class="d-inline">
-                        <input type="hidden" name="id" value="<?= $chamado['id'] ?>">
-                        <button type="submit" class="btn btn-danger btn-sm">
-                          Excluir
-                        </button>
-                      </form>
+
+
+                      <button type="submit" class="btn btn-danger btn-sm" data-toggle="modal"
+                        data-target="#excluirChamadoModal">
+                        Excluir
+                      </button>
+
 
                     </div>
                   </div>
@@ -109,40 +134,44 @@ $chamados = mysqli_query($conn, $sql);
             </button>
           </div>
           <div class="modal-body">
-            <input type="hidden" name="id" id="chamadoId">
+            <input type="hidden" name="id" value="<?= $chamado['id'] ?>">
 
             <div class="form-group">
               <label>Nome</label>
-              <input type="text" name="nome" class="form-control" id="chamadoNome" required>
+              <input type="text" name="nome" class="form-control" value="<?= $chamado['nome'] ?>" required>
             </div>
 
             <div class="form-group">
               <label>Equipamento</label>
-              <input type="text" name="equipamento" class="form-control" id="chamadoEquipamento" required>
+              <input type="text" name="titulo" class="form-control" value="<?= $chamado['titulo'] ?>" required>
             </div>
 
             <div class="form-group">
               <label>Categoria</label>
-              <input type="text" name="categoria" class="form-control" id="chamadoCategoria" required>
+              <input type="text" name="categoria" class="form-control" value="<?= $chamado['categoria'] ?>" required>
             </div>
 
             <div class="form-group">
               <label>Descrição</label>
-              <textarea name="descricao" class="form-control" id="chamadoDescricao" required></textarea>
+              <textarea name="descricao" class="form-control" required><?= $chamado['descricao'] ?></textarea>
             </div>
 
             <div class="form-group">
               <label>Status</label>
-              <select name="status" class="form-control" id="chamadoStatus" required>
-                <option value="aberto">Aberto</option>
-                <option value="em andamento">Em Andamento</option>
-                <option value="concluido">Concluído</option>
+              <?php $statusAtual = $chamado['status']; ?>
+              <select name="status" class="form-control">
+                <?php foreach ($statusOptions as $status): ?>
+                  <option value="<?= $status ?>" <?= $statusAtual === $status ? 'selected' : '' ?>>
+                    <?= ucfirst($status) ?>
+                  </option>
+                <?php endforeach; ?>
               </select>
             </div>
 
             <div class="form-group">
               <label>Preço</label>
-              <input type="text" name="preco" class="form-control" id="chamadoPreco" required>
+              <input type="text" name="preco" class="form-control" id="chamadoPreco" value="<?= $chamado['preco'] ?>"
+                required>
             </div>
 
           </div>
@@ -155,34 +184,30 @@ $chamados = mysqli_query($conn, $sql);
     </div>
   </div>
 
+  <div class="modal fade" id="excluirChamadoModal" tabindex="-1" role="dialog" aria-labelledby="excluirChamadoLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form action="processaExcluirChamado.php" method="POST">
+          <input type="hidden" name="id" value="<?= $chamado['id'] ?>">
+
+          <div class="alert alert-danger" role="alert">
+            Tem certeza que deseja excluir esse chamado ?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-danger">Confirmar exclusão</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-  <script>
-    $('#editarChamadoModal').on('show.bs.modal', function (event) {
 
-      var button = $(event.relatedTarget);
-      var id = button.data('id');
-
-      $.get('buscarChamado.php', { id: id }, function (data) {
-
-        var chamado = JSON.parse(data);
-
-        if (chamado) {
-          $('#chamadoId').val(chamado.id);
-          $('#chamadoNome').val(chamado.nome);
-          $('#chamadoEquipamento').val(chamado.equipamento);
-          $('#chamadoCategoria').val(chamado.categoria);
-          $('#chamadoDescricao').val(chamado.descricao);
-          $('#chamadoStatus').val(chamado.status);
-          $('#chamadoPreco').val(chamado.preco);
-        }
-
-      });
-
-    });
-  </script>
 
 </body>
 

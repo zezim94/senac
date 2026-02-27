@@ -1,10 +1,15 @@
 <?php
-include 'verificaLogin.php';
-$arquivo = file_get_contents('arquivo.JSON');
-$chamados = json_decode($arquivo, true);
+require_once 'verificaLogin.php';
+require_once 'conexao.php';
 
-$usuarios = file_get_contents('login.JSON');
-$user = json_decode($usuarios, true);
+$result = mysqli_query($conn, "SELECT COUNT(*) AS total FROM user");
+$row = mysqli_fetch_assoc($result);
+$totalUser = $row['total'];
+
+// Total de chamados
+$result2 = mysqli_query($conn, "SELECT COUNT(*) AS total FROM chamados");
+$row2 = mysqli_fetch_assoc($result2);
+$totalChamado = $row2['total'];
 
 ?>
 
@@ -69,7 +74,7 @@ $user = json_decode($usuarios, true);
                 <a href="consultar_chamado.php">
 
                   <?php if ($_SESSION['nivel'] == 'admin' || $_SESSION['nivel'] == 'tecnico'): ?>
-                    <span><?= count($chamados) ?></span>
+                    <span><?= $totalChamado ?></span>
                   <?php endif; ?>
 
                   <img src="img/formulario_consultar_chamado.png" width="70" height="70">
@@ -87,7 +92,7 @@ $user = json_decode($usuarios, true);
               <?php if ($_SESSION['nivel'] == 'admin') { ?>
                 <div class="col-3 d-flex justify-content-center">
                   <a href="usuarios.php">
-                    <?php echo "<span>" . count($user) . "</span>" ?>
+                    <?php echo "<span>" . $totalUser . "</span>" ?>
                     <img src="img/user.png" width="70" height="70">
                   </a>
                 </div>
