@@ -6,24 +6,7 @@ if (!isset($_GET['id'])) {
     exit;
 }
 
-$idEditar = (int)$_GET['id'];
 
-// Ler JSON
-$arquivo = file_get_contents('login.JSON');
-$usuarios = json_decode($arquivo, true);
-
-// Procurar usuário pelo ID
-$usuario = null;
-foreach ($usuarios as $user) {
-    if ((int)$user['ID'] === $idEditar) {
-        $usuario = $user;
-        break;
-    }
-}
-
-if (!$usuario) {
-    die("Usuário não encontrado!");
-}
 ?>
 
 <html>
