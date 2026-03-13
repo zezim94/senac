@@ -61,11 +61,23 @@
             transition: 0.3s;
         }
 
-        .btn-search { background: var(--dark); color: white; }
-        .btn-search:hover { background: #1a252f; }
+        .btn-search {
+            background: var(--dark);
+            color: white;
+        }
 
-        .btn-gps { background: var(--primary); color: white; }
-        .btn-gps:hover { background: #27ae60; }
+        .btn-search:hover {
+            background: #1a252f;
+        }
+
+        .btn-gps {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-gps:hover {
+            background: #27ae60;
+        }
 
         #map {
             height: 450px;
@@ -98,27 +110,56 @@
             background: #fff5f5;
         }
 
-        .info-card i { font-size: 1.5rem; color: var(--primary); margin-bottom: 10px; }
-        .info-card.alerta-perto i { color: var(--danger); animation: piscarIcone 1s infinite alternate;}
-
-        @keyframes piscarIcone {
-            from { transform: scale(1); opacity: 0.8; }
-            to { transform: scale(1.2); opacity: 1; }
+        .info-card i {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
         }
 
-        .info-card span { display: block; font-size: 1.2rem; font-weight: bold; }
-        .info-card label { font-size: 0.8rem; color: #7f8c8d; text-transform: uppercase; }
+        .info-card.alerta-perto i {
+            color: var(--danger);
+            animation: piscarIcone 1s infinite alternate;
+        }
+
+        @keyframes piscarIcone {
+            from {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+
+            to {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        .info-card span {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .info-card label {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            text-transform: uppercase;
+        }
 
         /* --- ESTILOS DO MODAL DE ALERTA --- */
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: rgba(0, 0, 0, 0.75);
-            display: none; /* Escondido por padrão */
+            display: none;
+            /* Escondido por padrão */
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            backdrop-filter: blur(5px); /* Efeito de desfoque no fundo */
+            backdrop-filter: blur(5px);
+            /* Efeito de desfoque no fundo */
         }
 
         .modal-content {
@@ -134,8 +175,15 @@
         }
 
         @keyframes deslizarModal {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         .modal-icone {
@@ -145,9 +193,19 @@
             animation: piscarIcone 0.5s infinite alternate;
         }
 
-        .modal-content h3 { margin: 0 0 10px 0; color: var(--dark); font-size: 1.5rem; }
-        .modal-content p { color: #555; font-size: 1.1rem; margin-bottom: 25px; line-height: 1.5; }
-        
+        .modal-content h3 {
+            margin: 0 0 10px 0;
+            color: var(--dark);
+            font-size: 1.5rem;
+        }
+
+        .modal-content p {
+            color: #555;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
         .btn-entendi {
             background: var(--danger);
             color: white;
@@ -157,7 +215,11 @@
             border-radius: 50px;
             text-transform: uppercase;
         }
-        .btn-entendi:hover { background: #c0392b; transform: scale(1.02); }
+
+        .btn-entendi:hover {
+            background: #c0392b;
+            transform: scale(1.02);
+        }
     </style>
 </head>
 
@@ -172,7 +234,8 @@
         <div class="search-container">
             <input type="text" id="endereco" placeholder="Digite seu endereço (Rua, Número, Cidade)...">
             <button class="btn btn-search" onclick="buscarEndereco()"><i class="fas fa-search"></i> Buscar</button>
-            <button class="btn btn-gps" onclick="usarGPS()" title="Usar minha localização"><i class="fas fa-location-arrow"></i> Meu Local</button>
+            <button class="btn btn-gps" onclick="usarGPS()" title="Usar minha localização"><i
+                    class="fas fa-location-arrow"></i> Meu Local</button>
         </div>
 
         <div id="map"></div>
@@ -214,8 +277,8 @@
         var ultimaLatCaminhao = null;
         var ultimaLngCaminhao = null;
 
-        var alertaTocado = false; 
-        
+        var alertaTocado = false;
+
         // --- CONFIGURAÇÃO DO ÁUDIO EM LOOP ---
         // Troquei por um som de sirene suave/aviso contínuo
         var somAlerta = new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
@@ -228,7 +291,7 @@
         });
 
         // Libera a permissão de áudio no primeiro clique do usuário
-        document.body.addEventListener('click', function() {
+        document.body.addEventListener('click', function () {
             somAlerta.load();
         }, { once: true });
 
@@ -313,7 +376,7 @@
 
                     var rota = data.routes[0];
                     var coords = rota.geometry.coordinates;
-                    var distMetros = rota.distance; 
+                    var distMetros = rota.distance;
 
                     var txtDist = document.getElementById("txt-distancia");
                     var txtTempo = document.getElementById("txt-tempo");
@@ -405,4 +468,5 @@
         setInterval(atualizar, 5000);
     </script>
 </body>
+
 </html>
