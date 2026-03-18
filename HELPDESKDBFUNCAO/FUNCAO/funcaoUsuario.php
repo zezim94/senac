@@ -95,6 +95,7 @@ function deletarUsuario($conn, $id)
 
 }
 
-function buscarUsuario($conn, $busca = null){
-    
+function buscarUsuario($conn, $busca = null)
+{
+
 }
