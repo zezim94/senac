@@ -79,8 +79,6 @@
                             <label class="form-label">Nível</label>
                             <select name="nivel" class="form-select">
                                 <option value="user">Usuário</option>
-                                <option value="admin">Admin</option>
-                                <option value="tecnico">Técnico</option>
                             </select>
                         </div>
 
