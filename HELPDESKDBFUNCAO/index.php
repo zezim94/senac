@@ -18,7 +18,21 @@
 
 <body>
 
-  <?php include 'nav.php'; ?>
+<nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">
+        <img src="img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+        App Help Desk
+    </a>
+
+    <?php if (isset($_SESSION['logado']) && $_SESSION['logado'] == true) { ?>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="../logout.php">SAIR</a>
+            </li>
+        </ul>
+    <?php } ?>
+
+</nav>
 
   <div class="container">
     <div class="row">
@@ -38,6 +52,7 @@
               </div>
               <button class="btn btn-lg btn-info btn-block" type="submit">Entrar</button>
             </form>
+            <a href="cadastrese.php" class="btn btn-lg btn-info btn-block" >Cadastre-se</a>
             <?php
             if (isset($_GET['login']) && $_GET['login'] == 'erro'): ?>
 

@@ -1,5 +1,5 @@
 <?php
-include 'verificaLogin.php';
+include '../verificaLogin.php';
 ?>
 
 <html>
@@ -22,7 +22,7 @@ include 'verificaLogin.php';
 
 <body>
 
-  <?php include 'nav.php'; ?>
+  <?php include '../LAYOUT/nav.php'; ?>
 
   <div class="container">
     <div class="row">
@@ -80,7 +80,7 @@ include 'verificaLogin.php';
 
                   <div class="row mt-5">
                     <div class="col-6">
-                      <a href="home.php" class="btn btn-lg btn-warning btn-block">Voltar</a>
+                      <a href="../USUARIO/home.php" class="btn btn-lg btn-warning btn-block">Voltar</a>
                     </div>
 
                     <div class="col-6">

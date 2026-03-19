@@ -1,7 +1,3 @@
-<?php
-require_once 'verificaLogin.php';
-?>
-
 <html>
 
 <head>
@@ -22,7 +18,22 @@ require_once 'verificaLogin.php';
 
 <body>
 
-    <?php include 'nav.php'; ?>
+
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">
+            <img src="img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+            App Help Desk
+        </a>
+
+        <?php if (isset($_SESSION['logado']) && $_SESSION['logado'] == true) { ?>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="../logout.php">SAIR</a>
+                </li>
+            </ul>
+        <?php } ?>
+
+    </nav>
 
     <div class="container">
         <div class="row">
@@ -48,14 +59,12 @@ require_once 'verificaLogin.php';
                         <?php
                     endif;
                     ?>
-                    <div class="card-header">
-                        Novo Usuário
-                    </div>
+
                     <div class="card-body">
                         <div class="row">
                             <div class="col">
 
-                                <form action="processaNovoUser.php" method="post">
+                                <form action="processaCadastro.php" method="post">
                                     <div class="form-group">
                                         <label>Nome</label>
                                         <input name="nome" type="text" class="form-control" placeholder="Nome">
@@ -87,11 +96,12 @@ require_once 'verificaLogin.php';
 
                                     <div class="row mt-5">
                                         <div class="col-6">
-                                            <a href="home.php" class="btn btn-lg btn-warning btn-block">Voltar</a>
+                                            <a href="index.php" class="btn btn-lg btn-warning btn-block">Voltar</a>
                                         </div>
 
                                         <div class="col-6">
-                                            <button class="btn btn-lg btn-info btn-block" type="submit">Criar</button>
+                                            <button class="btn btn-lg btn-info btn-block"
+                                                type="submit">Cadastre-se</button>
                                         </div>
                                     </div>
                                 </form>

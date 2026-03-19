@@ -1,6 +1,8 @@
 <?php
-include 'verificaLogin.php';
 require_once 'conexao.php';
+
+
+$conn = conexao();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -19,16 +21,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     mysqli_stmt_bind_param($stmt, 'sssss', $nome, $usuario, $email, $senhaHash, $nivel);
 
     if (mysqli_stmt_execute($stmt)) {
-        header('Location: novoUser.php?message=sucess');
+        header('Location: index.php?message=sucess');
         exit;
 
     } else {
-        header('Location: novoUser.php?message=error');
+        header('Location: index.php?message=error');
         exit;
     }
 
 
 } else {
     header('Location: index.php');
-    exit;
+   
 }
+
+?>

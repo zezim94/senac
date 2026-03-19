@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['id'] = $user['id'];
             $_SESSION['nivel'] = $user['nivel'];
 
-            header("Location: home.php");
+            header("Location: USUARIO/home.php");
             exit;
         }
 

@@ -1,5 +1,5 @@
 <?php
-include 'verificaLogin.php';
+include '../verificaLogin.php';
 
 if (!isset($_GET['id'])) {
     header('Location: listarUsuarios.php'); // volta se não veio ID

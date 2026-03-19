@@ -1,6 +1,6 @@
 <?php
-require_once 'verificaLogin.php';
-require_once 'conexao.php';
+require_once '../verificaLogin.php';
+require_once '../conexao.php';
 
 $conn = conexao();
 
@@ -24,7 +24,7 @@ if ($busca) {
   $chamados = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 } else {
-  $sql = "SELECT chamados.*, user.nome 
+  $sql = "SELECT chamados.*, user.nome
             FROM chamados 
             JOIN user ON chamados.userId = user.id";
 
@@ -58,12 +58,12 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
 
 <body>
 
-  <?php include 'nav.php'; ?>
+  <?php include '../LAYOUT/nav.php'; ?>
 
   <div class="container">
     <div class="row">
       <div class="card-consultar-chamado">
-        <a href="home.php" type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</a>
+        <a href="../USUARIO/home.php" type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</a>
         <div class="card">
 
           <!-- Mensagens de sucesso/erro -->
@@ -114,24 +114,30 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
                       <p><strong>Status:</strong> <?= $chamado['status'] ?? '' ?></p>
                       <?php if ($chamado['preco'] !== null): ?>
                         <p><strong>Preço:</strong> R$ <?= $chamado['preco'] ?></p>
+                        <p><strong>Observacao: </strong><?= $chamado['statusTec'] ?></p>
                       <?php endif; ?>
 
-                      <!-- Botão Editar -->
-                      <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
-                        data-target="#editarChamadoModal" data-id="<?= $chamado['id'] ?>"
-                        data-nome="<?= htmlspecialchars($chamado['nome']) ?>"
-                        data-titulo="<?= htmlspecialchars($chamado['titulo']) ?>"
-                        data-categoria="<?= htmlspecialchars($chamado['categoria']) ?>"
-                        data-descricao="<?= htmlspecialchars($chamado['descricao']) ?>"
-                        data-status="<?= $chamado['status'] ?>" data-preco="<?= $chamado['preco'] ?>">
-                        Editar
-                      </button>
 
-                      <!-- Botão Excluir (mantido individual) -->
-                      <button type="button" class="btn btn-danger" data-toggle="modal"
-                        data-target="#excluirChamadoModal<?= $chamado['id'] ?>">
-                        Excluir
-                      </button>
+                      <?php if ($chamado['status'] == 'aberto' || $ehAdmin): ?>
+
+                        <!-- Botão Editar -->
+                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                          data-target="#editarChamadoModal" data-id="<?= $chamado['id'] ?>"
+                          data-nome="<?= htmlspecialchars($chamado['nome']) ?>"
+                          data-titulo="<?= htmlspecialchars($chamado['titulo']) ?>"
+                          data-categoria="<?= htmlspecialchars($chamado['categoria']) ?>"
+                          data-descricao="<?= htmlspecialchars($chamado['descricao']) ?>"
+                          data-observacao="<?= htmlspecialchars($chamado['statusTec']) ?>"
+                          data-status="<?= $chamado['status'] ?>" data-preco="<?= $chamado['preco'] ?>">
+                          Editar
+                        </button>
+
+                        <!-- Botão Excluir (mantido individual) -->
+                        <button type="button" class="btn btn-danger" data-toggle="modal"
+                          data-target="#excluirChamadoModal<?= $chamado['id'] ?>">
+                          Excluir
+                        </button>
+                      <?php endif; ?>
 
                     </div>
                   </div>
@@ -179,8 +185,18 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
 
             <div class="form-group">
               <label>Descrição</label>
-              <textarea name="descricao" class="form-control" id="modalChamadoDescricao" required></textarea>
+
+              <textarea name="descricao" class="form-control" id="modalChamadoDescricao"></textarea>
+
             </div>
+
+            <div class="form-group">
+              <label>Observação</label>
+
+              <textarea name="observacao" class="form-control" id="modalChamadoObservacao"></textarea>
+
+            </div>
+
 
             <?php if ($_SESSION['nivel'] === 'admin' || $_SESSION['nivel'] === 'tecnico'): ?>
               <div class="form-group">
@@ -214,32 +230,54 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
   <!-- Script para popular o modal -->
+   <script>
+  var nivelUsuario = "<?= $_SESSION['nivel'] ?>";
+</script>
   <script>
-    $(document).ready(function () {
-      $('#editarChamadoModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // botão que abriu o modal
+    $('#editarChamadoModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
 
-        // Pega os dados do botão
-        var id = button.data('id');
-        var nome = button.data('nome');
-        var titulo = button.data('titulo');
-        var categoria = button.data('categoria');
-        var descricao = button.data('descricao');
-        var status = button.data('status');
-        var preco = button.data('preco');
+      var id = button.data('id');
+      var nome = button.data('nome');
+      var titulo = button.data('titulo');
+      var categoria = button.data('categoria');
+      var descricao = button.data('descricao');
+      var observacao = button.data('observacao');
+      var status = button.data('status');
+      var preco = button.data('preco');
 
-        // Popula os campos do modal
-        $('#modalChamadoId').val(id);
-        $('#modalChamadoNome').val(nome);
-        $('#modalChamadoTitulo').val(titulo);
-        $('#modalChamadoCategoria').val(categoria);
-        $('#modalChamadoDescricao').val(descricao);
+      $('#modalChamadoId').val(id);
+      $('#modalChamadoNome').val(nome);
+      $('#modalChamadoTitulo').val(titulo);
+      $('#modalChamadoCategoria').val(categoria);
+      $('#modalChamadoDescricao').val(descricao);
+      $('#modalChamadoObservacao').val(observacao);
 
-        <?php if ($_SESSION['nivel'] === 'admin' || $_SESSION['nivel'] === 'tecnico'): ?>
-          $('#modalChamadoStatus').val(status);
-          $('#modalChamadoPreco').val(preco);
-        <?php endif; ?>
-      });
+      // 🔥 AQUI A CORREÇÃO
+
+   if (nivelUsuario === 'admin' || nivelUsuario === 'tecnico') {
+  // 🔥 Admin/Técnico: tudo liberado
+  $('#modalChamadoDescricao').prop('readonly', false);
+  $('#modalChamadoObservacao').prop('readonly', false);
+  $('#modalChamadoDescricao').prop('required', true);
+
+} else {
+  // 👤 Usuário comum
+  if (status !== 'aberto') {
+    $('#modalChamadoDescricao').prop('readonly', true);
+    $('#modalChamadoObservacao').prop('readonly', true);
+    $('#modalChamadoDescricao').prop('required', false);
+  } else {
+    $('#modalChamadoDescricao').prop('readonly', false);
+    $('#modalChamadoObservacao').prop('readonly', false);
+    $('#modalChamadoDescricao').prop('required', true);
+  }
+}
+
+      <?php if ($_SESSION['nivel'] === 'admin' || $_SESSION['nivel'] === 'tecnico'): ?>
+        $('#modalChamadoStatus').val(status);
+        $('#modalChamadoPreco').val(preco);
+      <?php endif; ?>
     });
   </script>
 </body>

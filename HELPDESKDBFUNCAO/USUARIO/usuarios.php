@@ -1,6 +1,6 @@
 <?php
-require_once 'verificaLogin.php';
-require_once 'conexao.php';
+require_once '../verificaLogin.php';
+require_once '../conexao.php';
 
 $conn = conexao();
 
@@ -67,7 +67,7 @@ if (!$usuarios) {
 
 <body>
 
-    <?php include 'nav.php'; ?>
+    <?php include '../LAYOUT/nav.php'; ?>
 
     <div class="container">
         <div class="row">

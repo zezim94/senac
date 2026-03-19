@@ -1,6 +1,6 @@
 <?php
-require_once 'verificaLogin.php';
-require_once 'conexao.php';
+require_once '../verificaLogin.php';
+require_once '../conexao.php';
 
 $conn = conexao();
 
@@ -56,7 +56,8 @@ $totalChamado = $row2['total'];
 
 <body>
 
-  <?php include 'nav.php'; ?>
+
+    <?php include __DIR__ .'/../LAYOUT/nav.php'; ?>
 
   <div class="container">
     <div class="row">
@@ -73,26 +74,26 @@ $totalChamado = $row2['total'];
             <div class="row">
 
               <div class="col-3 d-flex justify-content-center">
-                <a href="abrir_chamado.php">
-                  <img src="img/formulario_abrir_chamado.png" width="70" height="70">
+                <a href="../CHAMADO/abrir_chamado.php">
+                  <img src="../img/formulario_abrir_chamado.png" width="70" height="70">
                 </a>
               </div>
 
               <div class="col-3 d-flex justify-content-center">
-                <a href="consultar_chamado.php" class="icon-wrapper">
+                <a href="../CHAMADO/consultar_chamado.php" class="icon-wrapper">
 
                   <?php if ($_SESSION['nivel'] == 'admin' || $_SESSION['nivel'] == 'tecnico'): ?>
                     <span><?= $totalChamado ?></span>
                   <?php endif; ?>
 
-                  <img src="img/formulario_consultar_chamado.png" width="70" height="70">
+                  <img src="../img/formulario_consultar_chamado.png" width="70" height="70">
                 </a>
               </div>
 
               <?php if ($_SESSION['nivel'] == 'admin') { ?>
                 <div class="col-3 d-flex justify-content-center">
                   <a href="novoUser.php">
-                    <img src="img/novoUser.png" width="70" height="70">
+                    <img src="../img/novoUser.png" width="70" height="70">
                   </a>
                 </div>
               <?php } ?>
@@ -101,7 +102,7 @@ $totalChamado = $row2['total'];
                 <div class="col-3 d-flex justify-content-center">
                   <a href="usuarios.php" class="icon-wrapper">
                     <?php echo "<span>" . $totalUser . "</span>" ?>
-                    <img src="img/user.png" width="70" height="70">
+                    <img src="../img/user.png" width="70" height="70">
                   </a>
                 </div>
               <?php } ?>
