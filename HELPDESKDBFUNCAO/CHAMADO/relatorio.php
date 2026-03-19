@@ -6,25 +6,24 @@ $conn = conexao();
 
 $busca = trim($_GET['busca'] ?? '');
 
+// CONTADORES
 $sqlAberto = "SELECT COUNT(*) AS total FROM chamados WHERE status = 'aberto'";
-$resultAberto = mysqli_query($conn, $sqlAberto);
-$aberto = mysqli_fetch_assoc($resultAberto)['total'];
+$aberto = mysqli_fetch_assoc(mysqli_query($conn, $sqlAberto))['total'];
 
 $sqlAndamento = "SELECT COUNT(*) AS total FROM chamados WHERE status = 'em andamento'";
-$resultAndamento = mysqli_query($conn, $sqlAndamento);
-$andamento = mysqli_fetch_assoc($resultAndamento)['total'];
+$andamento = mysqli_fetch_assoc(mysqli_query($conn, $sqlAndamento))['total'];
 
 $sqlConcluido = "SELECT COUNT(*) AS total FROM chamados WHERE status = 'concluido'";
-$resultConcluido = mysqli_query($conn, $sqlConcluido);
-$concluido = mysqli_fetch_assoc($resultConcluido)['total'];
+$concluido = mysqli_fetch_assoc(mysqli_query($conn, $sqlConcluido))['total'];
 
+// BUSCA
 if ($busca) {
 
     $buscaParam = "%$busca%";
 
     $sql = "SELECT c.*, u.nome as usuario FROM chamados c
-            left join user u on c.userId = u.id
-            WHERE c.status LIKE ? ";
+            LEFT JOIN user u ON c.userId = u.id
+            WHERE c.status LIKE ?";
 
     $stmt = mysqli_prepare($conn, $sql);
 
@@ -42,9 +41,9 @@ if ($busca) {
 
 } else {
 
-
     $sql = "SELECT c.*, u.nome as usuario FROM chamados c
-            left join user u on c.userId = u.id";
+            LEFT JOIN user u ON c.userId = u.id";
+
     $result = mysqli_query($conn, $sql);
 
     if (!$result) {
@@ -54,112 +53,133 @@ if ($busca) {
     $usuarios = mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
-// Garante que sempre será array
 if (!$usuarios) {
     $usuarios = [];
 }
 ?>
 
-<html>
+<!DOCTYPE html>
+<html lang="pt-br">
 
 <head>
     <meta charset="utf-8" />
-    <title>App Help Desk</title>
+    <title>Relatório - Help Desk</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-    <style>
-        .card-usuarios {
-            padding: 30px 0 0 0;
-            width: 100%;
-            margin: 0 auto;
-        }
-    </style>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
 
     <?php include '../LAYOUT/nav.php'; ?>
 
-    <div class="container">
-        <div class="row">
+    <div class="container mt-4">
 
-            <div class="card-usuarios">
-                <div class="card">
-                    <form action="relatorio.php" method="GET">
+        <div class="card shadow">
 
-                        <div class="mb-3">
-                            <label class="form-label">Filtrar por status</label><br>
-                            <a href="relatorio.php?busca=aberto"
-                                class="btn btn-primary <?= ($_GET['busca'] ?? '') === 'aberto' ? 'active' : '' ?>">
-                                Aberto (<?= $aberto ?>)
-                            </a>
-                            <a href="relatorio.php?busca=em andamento"
-                                class="btn btn-warning <?= ($_GET['busca'] ?? '') === 'em andamento' ? 'active' : '' ?>">
-                                Em andamento (<?= $andamento ?>)
-                            </a>
-                            <a href="relatorio.php?busca=concluido"
-                                class="btn btn-success <?= ($_GET['busca'] ?? '') === 'concluido' ? 'active' : '' ?>">
-                                Concluído (<?= $concluido ?>)
-                            </a>
-                            <a href="relatorio.php"
-                                class="btn btn-secondary <?= empty($_GET['busca']) ? 'active' : '' ?>">Todos</a>
-                        </div>
-                    </form>
-                    <div class="card-header">
-                        Lista de usuários
-                    </div>
+            <!-- FILTROS -->
+            <div class="card-body border-bottom">
 
-                    <div class="card-body">
-                        <table class="table table-striped table-hover">
-                            <thead>
+                <label class="form-label fw-bold">Filtrar por status</label>
+
+                <div class="d-flex flex-wrap gap-2">
+
+                    <a href="relatorio.php?busca=aberto"
+                        class="btn btn-primary <?= ($_GET['busca'] ?? '') === 'aberto' ? 'active' : '' ?>">
+                        Aberto <span class="badge bg-light text-dark"><?= $aberto ?></span>
+                    </a>
+
+                    <a href="relatorio.php?busca=em andamento"
+                        class="btn btn-warning <?= ($_GET['busca'] ?? '') === 'em andamento' ? 'active' : '' ?>">
+                        Em andamento <span class="badge bg-dark"><?= $andamento ?></span>
+                    </a>
+
+                    <a href="relatorio.php?busca=concluido"
+                        class="btn btn-success <?= ($_GET['busca'] ?? '') === 'concluido' ? 'active' : '' ?>">
+                        Concluído <span class="badge bg-light text-dark"><?= $concluido ?></span>
+                    </a>
+
+                    <a href="relatorio.php" class="btn btn-secondary <?= empty($_GET['busca']) ? 'active' : '' ?>">
+                        Todos
+                    </a>
+
+                </div>
+
+            </div>
+
+            <!-- HEADER -->
+            <div class="card-header bg-dark text-white">
+                Relatório de chamados
+            </div>
+
+            <!-- TABELA -->
+            <div class="card-body">
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle">
+
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Usuário</th>
+                                <th>Título</th>
+                                <th>Categoria</th>
+                                <th>Descrição</th>
+                                <th>Status</th>
+                                <th>Preço</th>
+                                <th>Obs Técnico</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php foreach ($usuarios as $user): ?>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Usuário</th>
-                                    <th>Título</th>
-                                    <th>Categoria</th>
-                                    <th>Descrição</th>
-                                    <th>Status</th>
-                                    <th>Preço</th>
-                                    <th>Obs Técnico</th>
+                                    <td><?= $user['id'] ?></td>
+                                    <td><?= htmlspecialchars($user['usuario']) ?></td>
+                                    <td><?= htmlspecialchars($user['titulo']) ?></td>
+                                    <td><?= htmlspecialchars($user['categoria']) ?></td>
+                                    <td><?= htmlspecialchars($user['descricao']) ?></td>
+                                    <td>
+                                        <?php
+                                        $status = $user['status'];
+                                        $badge = match ($status) {
+                                            'aberto' => 'primary',
+                                            'em andamento' => 'warning',
+                                            'concluido' => 'success',
+                                            default => 'secondary'
+                                        };
+                                        ?>
+                                        <span class="badge bg-<?= $badge ?>">
+                                            <?= $status ?>
+                                        </span>
+                                    </td>
+                                    <td>R$ <?= number_format($user['preco'], 2, ',', '.') ?></td>
+                                    <td><?= htmlspecialchars($user['statusTec']) ?></td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <?php
+                            <?php endforeach; ?>
+                        </tbody>
 
-                                foreach ($usuarios as $user):
+                    </table>
+                </div>
 
-
-                                    ?>
-
-                                    <tr>
-                                        <td><?= $user['id'] ?></td>
-                                        <td><?= $user['usuario'] ?></td>
-                                        <td><?= $user['titulo'] ?></td>
-                                        <td><?= $user['categoria'] ?></td>
-                                        <td><?= $user['descricao'] ?></td>
-                                        <td><?= $user['status'] ?></td>
-                                        <td><?= $user['preco'] ?></td>
-                                        <td><?= $user['statusTec'] ?></td>
-                                        <td>
-
-                                        </td>
-                                    </tr>
-
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-
-                        <div class="row mt-5">
-                            <div class="col-6">
-                                <a href="../usuario/home.php" class="btn btn-lg btn-warning btn-block">Voltar</a>
-                            </div>
-                        </div>
+                <!-- VOLTAR -->
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <a href="../usuario/home.php" class="btn btn-warning w-100 btn-lg">
+                            Voltar
+                        </a>
                     </div>
                 </div>
+
             </div>
+
         </div>
+
+    </div>
+
+    <!-- JS Bootstrap 5 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>

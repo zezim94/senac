@@ -41,26 +41,25 @@ if ($busca) {
     $usuarios = mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
-// Garante que sempre será array
+// Garante array
 if (!$usuarios) {
     $usuarios = [];
 }
 ?>
 
-<html>
+<!DOCTYPE html>
+<html lang="pt-br">
 
 <head>
     <meta charset="utf-8" />
     <title>App Help Desk</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         .card-usuarios {
-            padding: 30px 0 0 0;
-            width: 100%;
-            margin: 0 auto;
+            padding-top: 30px;
         }
     </style>
 </head>
@@ -70,84 +69,160 @@ if (!$usuarios) {
     <?php include '../LAYOUT/nav.php'; ?>
 
     <div class="container">
-        <div class="row">
 
-            <div class="card-usuarios">
-                <div class="card">
-                    <form action="usuarios.php" method="GET">
+        <div class="card card-usuarios shadow">
 
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Pesquisa</label>
-                            <input type="text" name="busca" class="form-control" value="<?= htmlspecialchars($_GET['busca'] ?? '') ?>">
-                        </div>
+            <!-- FORM DE BUSCA -->
+            <div class="card-body border-bottom">
+                <form action="usuarios.php" method="GET" class="row g-3">
 
-                        <button type="submit" class="btn btn-primary">Buscar</button>
-                    </form>
-                    <div class="card-header">
-                        Lista de usuários
+                    <div class="col-md-10">
+                        <label class="form-label">Pesquisar usuário</label>
+                        <input type="text" name="busca" class="form-control"
+                            placeholder="Digite nome, usuário ou email..."
+                            value="<?= htmlspecialchars($_GET['busca'] ?? '') ?>">
                     </div>
 
-                    <div class="card-body">
-                        <table class="table table-striped table-hover">
-                            <thead>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            Buscar
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- HEADER -->
+            <div class="card-header bg-dark text-white">
+                Lista de usuários
+            </div>
+
+            <!-- TABELA -->
+            <div class="card-body">
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle">
+
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Nível</th>
+                                <th class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php foreach ($usuarios as $user):
+
+                                $nivel = $user['nivel'];
+
+                                switch ($nivel) {
+                                    case 'admin':
+                                        $nivel = 'Administrador';
+                                        break;
+                                    case 'user':
+                                        $nivel = 'Usuário';
+                                        break;
+                                    case 'tecnico':
+                                        $nivel = 'Técnico';
+                                        break;
+                                }
+                                ?>
+
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Nome</th>
-                                    <th>Email</th>
-                                    <th>Senha</th>
-                                    <th>Nivel</th>
-                                    <th>Ações</th>
+                                    <td><?= $user['id'] ?></td>
+                                    <td><?= htmlspecialchars($user['nome']) ?></td>
+                                    <td><?= htmlspecialchars($user['email']) ?></td>
+                                    <td><?= $nivel ?></td>
+
+                                    <td class="text-center">
+                                        <a href="processaEditarUser.php?id=<?= $user['id'] ?>"
+                                            class="btn btn-warning btn-sm">
+                                            Editar
+                                        </a>
+
+                                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#modalExcluir" data-id="<?= $user['id'] ?>"
+                                            data-nome="<?= htmlspecialchars($user['nome']) ?>">
+                                            Excluir
+                                        </button>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <?php
 
-                                foreach ($usuarios as $user):
+                            <?php endforeach; ?>
+                        </tbody>
 
-                                    $nivel = $user['nivel'];
+                    </table>
+                </div>
 
-                                    switch ($nivel) {
-                                        case 'admin':
-                                            $nivel = 'Administrador';
-                                            break;
-                                        case 'user':
-                                            $nivel = 'Usuário';
-                                            break;
-                                        case 'tecnico':
-                                            $nivel = 'Técnico';
-                                            break;
-                                    }
-
-                                    ?>
-
-                                    <tr>
-                                        <td><?= $user['id'] ?></td>
-                                        <td><?= $user['nome'] ?></td>
-                                        <td><?= $user['email'] ?></td>
-                                        <td><?= $user['senha'] ?></td>
-                                        <td><?= $nivel ?></td>
-                                        <td>
-                                            <a href="processaEditarUser.php?id=<?= $user['id'] ?>"
-                                                class="btn btn-warning btn-sm">Editar</a>
-                                            <a href="processaExcluirUser.php?id=<?= $user['id'] ?>"
-                                                class="btn btn-danger btn-sm"
-                                                onclick="return confirm('Tem certeza que deseja excluir <?= $user['nome'] ?>?')">Excluir</a>
-                                        </td>
-                                    </tr>
-
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-
-                        <div class="row mt-5">
-                            <div class="col-6">
-                                <a href="home.php" class="btn btn-lg btn-warning btn-block">Voltar</a>
-                            </div>
-                        </div>
+                <!-- BOTÃO VOLTAR -->
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <a href="home.php" class="btn btn-warning w-100 btn-lg">
+                            Voltar
+                        </a>
                     </div>
                 </div>
+
             </div>
         </div>
+
+    </div>
+
+    <div class="modal fade" id="modalExcluir" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p id="textoModal">Tem certeza que deseja excluir?</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+                    <a id="btnConfirmarExcluir" href="#" class="btn btn-danger">
+                        Excluir
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            var modal = document.getElementById('modalExcluir');
+
+            modal.addEventListener('show.bs.modal', function (event) {
+
+                var button = event.relatedTarget;
+
+                var userId = button.getAttribute('data-id');
+                var userNome = button.getAttribute('data-nome');
+
+                var texto = document.getElementById('textoModal');
+                var link = document.getElementById('btnConfirmarExcluir');
+
+                texto.innerHTML = "Tem certeza que deseja excluir " + userNome + "?";
+
+                link.href = "processaExcluirUser.php?id=" + userId;
+            });
+
+        });
+    </script>
+
 </body>
 
 </html>
