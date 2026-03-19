@@ -1,6 +1,8 @@
 <?php
 require_once '../verificaLogin.php';
-require_once 'conexao.php';
+require_once '../conexao.php';
+
+$conn = conexao();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 

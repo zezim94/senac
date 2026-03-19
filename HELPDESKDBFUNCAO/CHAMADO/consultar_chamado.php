@@ -133,8 +133,9 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
                         </button>
 
                         <!-- Botão Excluir (mantido individual) -->
-                        <button type="button" class="btn btn-danger" data-toggle="modal"
-                          data-target="#excluirChamadoModal<?= $chamado['id'] ?>">
+                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                          data-target="#excluirChamadoModal" data-id="<?= $chamado['id'] ?>"
+                          data-nome="<?= htmlspecialchars($chamado['titulo']) ?>">
                           Excluir
                         </button>
                       <?php endif; ?>
@@ -150,6 +151,38 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
 
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal Excluir -->
+  <div class="modal fade" id="excluirChamadoModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <form action="processaExcluirChamado.php" method="POST" class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmar Exclusão</h5>
+          <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <input type="hidden" name="id" id="excluirChamadoId">
+
+          <p>Tem certeza que deseja excluir o chamado:</p>
+          <strong id="excluirChamadoNome"></strong>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-danger">
+            Excluir
+          </button>
+        </div>
+
+      </form>
     </div>
   </div>
 
@@ -230,10 +263,19 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
   <!-- Script para popular o modal -->
-   <script>
-  var nivelUsuario = "<?= $_SESSION['nivel'] ?>";
-</script>
   <script>
+    var nivelUsuario = "<?= $_SESSION['nivel'] ?>";
+  </script>
+  <script>
+    $('#excluirChamadoModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+
+      var id = button.data('id');
+      var nome = button.data('nome');
+
+      $('#excluirChamadoId').val(id);
+      $('#excluirChamadoNome').text(nome);
+    });
     $('#editarChamadoModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget);
 
@@ -255,24 +297,24 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
 
       // 🔥 AQUI A CORREÇÃO
 
-   if (nivelUsuario === 'admin' || nivelUsuario === 'tecnico') {
-  // 🔥 Admin/Técnico: tudo liberado
-  $('#modalChamadoDescricao').prop('readonly', false);
-  $('#modalChamadoObservacao').prop('readonly', false);
-  $('#modalChamadoDescricao').prop('required', true);
+      if (nivelUsuario === 'admin' || nivelUsuario === 'tecnico') {
+        // 🔥 Admin/Técnico: tudo liberado
+        $('#modalChamadoDescricao').prop('readonly', false);
+        $('#modalChamadoObservacao').prop('readonly', false);
+        $('#modalChamadoDescricao').prop('required', true);
 
-} else {
-  // 👤 Usuário comum
-  if (status !== 'aberto') {
-    $('#modalChamadoDescricao').prop('readonly', true);
-    $('#modalChamadoObservacao').prop('readonly', true);
-    $('#modalChamadoDescricao').prop('required', false);
-  } else {
-    $('#modalChamadoDescricao').prop('readonly', false);
-    $('#modalChamadoObservacao').prop('readonly', false);
-    $('#modalChamadoDescricao').prop('required', true);
-  }
-}
+      } else {
+        // 👤 Usuário comum
+        if (status !== 'aberto') {
+          $('#modalChamadoDescricao').prop('readonly', true);
+          $('#modalChamadoObservacao').prop('readonly', true);
+          $('#modalChamadoDescricao').prop('required', false);
+        } else {
+          $('#modalChamadoDescricao').prop('readonly', false);
+          $('#modalChamadoObservacao').prop('readonly', false);
+          $('#modalChamadoDescricao').prop('required', true);
+        }
+      }
 
       <?php if ($_SESSION['nivel'] === 'admin' || $_SESSION['nivel'] === 'tecnico'): ?>
         $('#modalChamadoStatus').val(status);
