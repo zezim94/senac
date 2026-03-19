@@ -57,7 +57,7 @@ $totalChamado = $row2['total'];
 <body>
 
 
-    <?php include __DIR__ .'/../LAYOUT/nav.php'; ?>
+  <?php include __DIR__ . '/../LAYOUT/nav.php'; ?>
 
   <div class="container">
     <div class="row">
@@ -65,7 +65,7 @@ $totalChamado = $row2['total'];
       <div class="card-home">
         <div class="card">
           <?php if (isset($_SESSION['logado']) && $_SESSION['logado'] == true) { ?>
-            <h2 class="text-center">Olá, <?= $_SESSION['nome'] ?></h2>
+            <h2 class="text-center">Olá, <?= $_SESSION['usuario'] ?></h2>
           <?php } ?>
           <div class="card-header">
             Menu
@@ -90,8 +90,21 @@ $totalChamado = $row2['total'];
                 </a>
               </div>
 
+              <?php if ($_SESSION['nivel'] == 'admin' || $_SESSION['nivel'] == 'tecnico') { ?>
+                <div class="col-2 d-flex justify-content-center">
+                  <a href="../CHAMADO/relatorio.php" class="icon-wrapper">
+
+                    <?php if ($_SESSION['nivel'] == 'admin' || $_SESSION['nivel'] == 'tecnico'): ?>
+                      <span><?= $totalChamado ?></span>
+                    <?php endif; ?>
+
+                    <img src="../img/chamados.png" width="70" height="70">
+                  </a>
+                </div>
+              <?php } ?>
+
               <?php if ($_SESSION['nivel'] == 'admin') { ?>
-                <div class="col-3 d-flex justify-content-center">
+                <div class="col-2 d-flex justify-content-center">
                   <a href="novoUser.php">
                     <img src="../img/novoUser.png" width="70" height="70">
                   </a>
@@ -99,7 +112,7 @@ $totalChamado = $row2['total'];
               <?php } ?>
 
               <?php if ($_SESSION['nivel'] == 'admin') { ?>
-                <div class="col-3 d-flex justify-content-center">
+                <div class="col-2 d-flex justify-content-center">
                   <a href="usuarios.php" class="icon-wrapper">
                     <?php echo "<span>" . $totalUser . "</span>" ?>
                     <img src="../img/user.png" width="70" height="70">

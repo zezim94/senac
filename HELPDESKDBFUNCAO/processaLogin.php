@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $_SESSION['logado'] = true;
             $_SESSION['nome'] = $user['nome'];
+            $_SESSION['usuario'] = $user['usuario'];
             $_SESSION['id'] = $user['id'];
             $_SESSION['nivel'] = $user['nivel'];
 
