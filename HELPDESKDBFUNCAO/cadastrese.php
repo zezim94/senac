@@ -4,13 +4,14 @@
     <meta charset="utf-8" />
     <title>App Help Desk</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         .card-novo-user {
             padding: 30px 0 0 0;
             width: 100%;
+            max-width: 500px;
             margin: 0 auto;
         }
     </style>
@@ -18,100 +19,90 @@
 
 <body>
 
+    <nav class="navbar navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="img/logo.png" width="30" height="30" class="d-inline-block align-text-top" alt="">
+                App Help Desk
+            </a>
 
-    <nav class="navbar navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">
-            <img src="img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-            App Help Desk
-        </a>
-
-        <?php if (isset($_SESSION['logado']) && $_SESSION['logado'] == true) { ?>
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="../logout.php">SAIR</a>
-                </li>
-            </ul>
-        <?php } ?>
-
+            <?php if (isset($_SESSION['logado']) && $_SESSION['logado'] == true) { ?>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../logout.php">SAIR</a>
+                    </li>
+                </ul>
+            <?php } ?>
+        </div>
     </nav>
 
     <div class="container">
-        <div class="row">
+        <div class="card-novo-user">
+            <div class="card">
 
-            <div class="card-novo-user">
-                <div class="card">
-                    <?php
-                    if (isset($_GET['message']) && $_GET['message'] === 'sucess'):
-                        ?>
-                        <div class="alert alert-success" role="alert">
-                            Usuário cadastrado com sucesso !
+                <?php if (isset($_GET['message']) && $_GET['message'] === 'sucess'): ?>
+                    <div class="alert alert-success text-center" role="alert">
+                        Usuário cadastrado com sucesso!
+                    </div>
+                <?php endif; ?>
+
+                <?php if (isset($_GET['message']) && $_GET['message'] === 'error'): ?>
+                    <div class="alert alert-danger text-center" role="alert">
+                        Erro ao cadastrar o usuário!
+                    </div>
+                <?php endif; ?>
+
+                <div class="card-body">
+                    <form action="processaCadastro.php" method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Nome</label>
+                            <input name="nome" type="text" class="form-control" placeholder="Nome" required>
                         </div>
-                        <?php
-                    endif;
-                    ?>
 
-                    <?php
-                    if (isset($_GET['message']) && $_GET['message'] === 'error'):
-                        ?>
-                        <div class="alert alert-danger" role="alert">
-                            Erro ao cadastrar o usuário!
+                        <div class="mb-3">
+                            <label class="form-label">Usuário</label>
+                            <input name="usuario" type="text" class="form-control" placeholder="Usuário" required>
                         </div>
-                        <?php
-                    endif;
-                    ?>
 
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col">
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input name="email" type="email" class="form-control" placeholder="Email" required>
+                        </div>
 
-                                <form action="processaCadastro.php" method="post">
-                                    <div class="form-group">
-                                        <label>Nome</label>
-                                        <input name="nome" type="text" class="form-control" placeholder="Nome">
-                                    </div>
+                        <div class="mb-3">
+                            <label class="form-label">Senha</label>
+                            <input name="senha" type="password" class="form-control" placeholder="Senha" required>
+                        </div>
 
-                                    <div class="form-group">
-                                        <label>Usuário</label>
-                                        <input name="usuario" type="text" class="form-control" placeholder="Usuário">
-                                    </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nível</label>
+                            <select name="nivel" class="form-select">
+                                <option value="user">Usuário</option>
+                                <option value="admin">Admin</option>
+                                <option value="tecnico">Técnico</option>
+                            </select>
+                        </div>
 
-                                    <div class="form-group">
-                                        <label>Email</label>
-                                        <input name="email" type="email" class="form-control" placeholder="Email">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Senha</label>
-                                        <input name="senha" type="password" class="form-control" placeholder="Senha">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Nível</label>
-                                        <select name="nivel" class="form-control">
-                                            <option value="user">Usuário</option>
-                                            <option value="admin">Admin</option>
-                                            <option value="tecnico">Técnico</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="row mt-5">
-                                        <div class="col-6">
-                                            <a href="index.php" class="btn btn-lg btn-warning btn-block">Voltar</a>
-                                        </div>
-
-                                        <div class="col-6">
-                                            <button class="btn btn-lg btn-info btn-block"
-                                                type="submit">Cadastre-se</button>
-                                        </div>
-                                    </div>
-                                </form>
-
+                        <div class="row mt-4">
+                            <div class="col-6 d-grid">
+                                <a href="index.php" class="btn btn-warning btn-lg">Voltar</a>
+                            </div>
+                            <div class="col-6 d-grid">
+                                <button class="btn btn-info btn-lg" type="submit">Cadastre-se</button>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
+
             </div>
         </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-c6Eg+E2k33d4D1WZqB9c6pjsdfuH2FqHZb+pc0gkVsaYV2L4k7tW2U9aENvZ45wX"
+        crossorigin="anonymous"></script>
+
 </body>
 
 </html>

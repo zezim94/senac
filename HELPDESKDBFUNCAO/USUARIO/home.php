@@ -15,14 +15,30 @@ $totalChamado = $row2['total'];
 
 ?>
 
+<?php
+require_once '../verificaLogin.php';
+require_once '../conexao.php';
+
+$conn = conexao();
+
+$result = mysqli_query($conn, "SELECT COUNT(*) AS total FROM user");
+$row = mysqli_fetch_assoc($result);
+$totalUser = $row['total'];
+
+// Total de chamados
+$result2 = mysqli_query($conn, "SELECT COUNT(*) AS total FROM chamados");
+$row2 = mysqli_fetch_assoc($result2);
+$totalChamado = $row2['total'];
+
+?>
+
 <html>
 
 <head>
   <meta charset="utf-8" />
   <title>App Help Desk</title>
 
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 
   <style>
     .card-home {
