@@ -1,5 +1,6 @@
 <?php
 require_once '../verificaLogin.php';
+require_once '../FUNCAO/funcaoChamado.php';
 require_once '../conexao.php';
 
 $conn = conexao();
@@ -7,36 +8,8 @@ $conn = conexao();
 $busca = trim($_GET['busca'] ?? '');
 $statusOptions = ['aberto', 'em andamento', 'concluido'];
 
-if ($busca) {
-  $buscaParam = "%$busca%";
-  $sql = "SELECT chamados.*, user.nome 
-            FROM chamados 
-            JOIN user ON chamados.userId = user.id
-            WHERE user.nome LIKE ? OR chamados.titulo LIKE ? OR chamados.categoria LIKE ?";
-
-  $stmt = mysqli_prepare($conn, $sql);
-  if (!$stmt)
-    die("Erro no prepare: " . mysqli_error($conn));
-
-  mysqli_stmt_bind_param($stmt, "sss", $buscaParam, $buscaParam, $buscaParam);
-  mysqli_stmt_execute($stmt);
-  $result = mysqli_stmt_get_result($stmt);
-  $chamados = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-} else {
-  $sql = "SELECT chamados.*, user.nome
-            FROM chamados 
-            JOIN user ON chamados.userId = user.id";
-
-  $result = mysqli_query($conn, $sql);
-  if (!$result)
-    die("Erro na query: " . mysqli_error($conn));
-
-  $chamados = mysqli_fetch_all($result, MYSQLI_ASSOC);
-}
-
-$statusOptions = ['aberto', 'em andamento', 'concluido'];
-?>
+$chamados = buscarTodos($conn, $busca)
+  ?>
 
 <html>
 
@@ -96,55 +69,59 @@ $statusOptions = ['aberto', 'em andamento', 'concluido'];
           <div class="card-body">
             <div class="row">
 
-              <?php foreach ($chamados as $chamado):
-                $ehDono = (int) $_SESSION['id'] === (int) $chamado['userId'];
-                $ehAdmin = $_SESSION['nivel'] === 'admin' || $_SESSION['nivel'] === 'tecnico';
+              <?php if (!empty($chamados) && is_array($chamados)): ?>
+                <?php foreach ($chamados as $chamado):
+                  $ehDono = (int) $_SESSION['id'] === (int) $chamado['userId'];
+                  $ehAdmin = $_SESSION['nivel'] === 'admin' || $_SESSION['nivel'] === 'tecnico';
 
-                if (!$ehDono && !$ehAdmin)
-                  continue;
-                ?>
+                  if (!$ehDono && !$ehAdmin)
+                    continue;
+                  ?>
 
-                <div class="col-md-4 mb-4">
-                  <div class="card bg-light h-100">
-                    <div class="card-body">
-                      <h5 class="card-title"><?= $chamado['nome'] ?></h5>
-                      <h6><?= $chamado['titulo'] ?></h6>
-                      <small class="text-muted"><?= $chamado['categoria'] ?></small>
-                      <p class="mt-2"><?= $chamado['descricao'] ?></p>
-                      <p><strong>Status:</strong> <?= $chamado['status'] ?? '' ?></p>
-                      <?php if ($chamado['preco'] !== null): ?>
-                        <p><strong>Preço:</strong> R$ <?= $chamado['preco'] ?></p>
-                        <p><strong>Observacao: </strong><?= $chamado['statusTec'] ?></p>
-                      <?php endif; ?>
+                  <div class="col-md-4 mb-4">
+                    <div class="card bg-light h-100">
+                      <div class="card-body">
+                        <h5 class="card-title"><?= $chamado['usuario'] ?></h5>
+                        <h6><?= $chamado['titulo'] ?></h6>
+                        <small class="text-muted"><?= $chamado['categoria'] ?></small>
+                        <p class="mt-2"><?= $chamado['descricao'] ?></p>
+                        <p><strong>Status:</strong> <?= $chamado['status'] ?? '' ?></p>
+                        <?php if ($chamado['preco'] !== null): ?>
+                          <p><strong>Preço:</strong> R$ <?= $chamado['preco'] ?></p>
+                          <p><strong>Observacao: </strong><?= $chamado['statusTec'] ?></p>
+                        <?php endif; ?>
 
 
-                      <?php if ($chamado['status'] == 'aberto' || $ehAdmin): ?>
+                        <?php if ($chamado['status'] == 'aberto' || $ehAdmin): ?>
 
-                        <!-- Botão Editar -->
-                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
-                          data-target="#editarChamadoModal" data-id="<?= $chamado['id'] ?>"
-                          data-nome="<?= htmlspecialchars($chamado['nome']) ?>"
-                          data-titulo="<?= htmlspecialchars($chamado['titulo']) ?>"
-                          data-categoria="<?= htmlspecialchars($chamado['categoria']) ?>"
-                          data-descricao="<?= htmlspecialchars($chamado['descricao']) ?>"
-                          data-observacao="<?= htmlspecialchars($chamado['statusTec']) ?>"
-                          data-status="<?= $chamado['status'] ?>" data-preco="<?= $chamado['preco'] ?>">
-                          Editar
-                        </button>
+                          <!-- Botão Editar -->
+                          <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                            data-target="#editarChamadoModal" data-id="<?= $chamado['id'] ?>"
+                            data-nome="<?= htmlspecialchars($chamado['usuario']) ?>"
+                            data-titulo="<?= htmlspecialchars($chamado['titulo']) ?>"
+                            data-categoria="<?= htmlspecialchars($chamado['categoria']) ?>"
+                            data-descricao="<?= htmlspecialchars($chamado['descricao']) ?>"
+                            data-observacao="<?= htmlspecialchars($chamado['statusTec']) ?>"
+                            data-status="<?= $chamado['status'] ?>" data-preco="<?= $chamado['preco'] ?>">
+                            Editar
+                          </button>
 
-                        <!-- Botão Excluir (mantido individual) -->
-                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-                          data-target="#excluirChamadoModal" data-id="<?= $chamado['id'] ?>"
-                          data-nome="<?= htmlspecialchars($chamado['titulo']) ?>">
-                          Excluir
-                        </button>
-                      <?php endif; ?>
+                          <!-- Botão Excluir (mantido individual) -->
+                          <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                            data-target="#excluirChamadoModal" data-id="<?= $chamado['id'] ?>"
+                            data-nome="<?= htmlspecialchars($chamado['titulo']) ?>">
+                            Excluir
+                          </button>
+                        <?php endif; ?>
 
+                      </div>
                     </div>
                   </div>
-                </div>
 
-              <?php endforeach; ?>
+                <?php endforeach; ?>
+              <?php else: ?>
+                <p>Nenhum chamado encontrado.</p>
+              <?php endif; ?>
 
             </div>
           </div>

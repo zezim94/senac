@@ -1,50 +1,17 @@
 <?php
 require_once '../verificaLogin.php';
+require_once '../FUNCAO/funcaoUsuario.php';
 require_once '../conexao.php';
+
+$conn = conexao();
+
 
 $conn = conexao();
 
 $busca = trim($_GET['busca'] ?? '');
 
-if ($busca) {
+$usuarios = buscarUsuario($conn, $busca);
 
-    $buscaParam = "%$busca%";
-
-    $sql = "SELECT * FROM user 
-            WHERE nome LIKE ? 
-               OR usuario LIKE ? 
-               OR email LIKE ?";
-
-    $stmt = mysqli_prepare($conn, $sql);
-
-    if (!$stmt) {
-        die("Erro na busca: " . mysqli_error($conn));
-    }
-
-    mysqli_stmt_bind_param($stmt, "sss", $buscaParam, $buscaParam, $buscaParam);
-    mysqli_stmt_execute($stmt);
-
-    $result = mysqli_stmt_get_result($stmt);
-    $usuarios = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-    mysqli_stmt_close($stmt);
-
-} else {
-
-    $sql = "SELECT * FROM user";
-    $result = mysqli_query($conn, $sql);
-
-    if (!$result) {
-        die("Erro na busca: " . mysqli_error($conn));
-    }
-
-    $usuarios = mysqli_fetch_all($result, MYSQLI_ASSOC);
-}
-
-// Garante array
-if (!$usuarios) {
-    $usuarios = [];
-}
 ?>
 
 <!DOCTYPE html>

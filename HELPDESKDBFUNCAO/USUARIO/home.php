@@ -1,37 +1,13 @@
 <?php
 require_once '../verificaLogin.php';
 require_once '../conexao.php';
+require_once '../FUNCAO/funcaoUsuario.php';
 
 $conn = conexao();
 
-$result = mysqli_query($conn, "SELECT COUNT(*) AS total FROM user");
-$row = mysqli_fetch_assoc($result);
-$totalUser = $row['total'];
-
-// Total de chamados
-$result2 = mysqli_query($conn, "SELECT COUNT(*) AS total FROM chamados");
-$row2 = mysqli_fetch_assoc($result2);
-$totalChamado = $row2['total'];
-
+$totalUser = contarRegistros($conn, 'user');
+$totalChamado = contarRegistros($conn, 'chamados');
 ?>
-
-<?php
-require_once '../verificaLogin.php';
-require_once '../conexao.php';
-
-$conn = conexao();
-
-$result = mysqli_query($conn, "SELECT COUNT(*) AS total FROM user");
-$row = mysqli_fetch_assoc($result);
-$totalUser = $row['total'];
-
-// Total de chamados
-$result2 = mysqli_query($conn, "SELECT COUNT(*) AS total FROM chamados");
-$row2 = mysqli_fetch_assoc($result2);
-$totalChamado = $row2['total'];
-
-?>
-
 <html>
 
 <head>

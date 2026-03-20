@@ -1,27 +1,14 @@
 <?php
 include '../verificaLogin.php';
-
+require_once '../FUNCAO/funcaoUsuario.php';
 include '../conexao.php';
 
 $conn = conexao();
+
 $id = $_GET['id'] ?? null;
 
-if (!$id) {
-    die("ID não informado");
-}
+$usuario = buscarPorId($conn, $id);
 
-$sql = "SELECT * FROM user WHERE id = ?";
-$stmt = mysqli_prepare($conn, $sql);
-
-mysqli_stmt_bind_param($stmt, "i", $id);
-mysqli_stmt_execute($stmt);
-
-$result = mysqli_stmt_get_result($stmt);
-$usuario = mysqli_fetch_assoc($result);
-
-if (!$usuario) {
-    die("Usuário não encontrado");
-}
 ?>
 
 <html>

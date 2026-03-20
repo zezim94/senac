@@ -8,12 +8,17 @@ function conexao()
     $pass = '';
     $db = "helpdesk";
 
-    $conn = mysqli_connect($server, $user, $pass, $db);
+    try {
 
-    if (!$conn) {
+        $conn = new PDO("mysql:host=$server; dbname=$db;charset=utf8", $user, $pass);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        die("Error na conexão: " . mysqli_connect_error());
+        return $conn;
+    } catch (PDOException $e) {
+
+        die("Erro na conexão: " . $e->getMessage());
+
     }
 
-    return $conn;
+
 }
