@@ -12,13 +12,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $descricao = $_POST['descricao'];
     $idUser = $_SESSION['id'];
 
-    $sql = 'INSERT INTO chamados(titulo, categoria, descricao, userId) values(?, ?, ?, ?)';
+    $sql = 'INSERT INTO chamados(titulo, categoria, descricao, userId) values(:titulo, :categoria, :descricao, :userId)';
 
-    $stmt = mysqli_prepare($conn, $sql);
+    $stmt = $conn->prepare($sql);
 
-    mysqli_stmt_bind_param($stmt, 'sssi', $titulo, $categoria, $descricao, $idUser);
+    $stmt->execute([
+        'titulo' => $titulo,
+        'categoria' => $categoria,
+        'descricao' => $descricao,
+        'userId' => $idUser
+    ]);
 
-    if (mysqli_stmt_execute($stmt)) {
+ 
+
+    if ($stmt) {
         header('Location: abrir_chamado.php?message=sucess');
         exit;
     } else {

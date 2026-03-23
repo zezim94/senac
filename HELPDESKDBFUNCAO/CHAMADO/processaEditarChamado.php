@@ -15,14 +15,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $preco = str_replace(',', '.', $_POST['preco']);
     $preco = (float) $preco;
 
-    $sql = 'UPDATE chamados set titulo = ?, categoria = ?, descricao = ?, statusTec = ?, status = ?, preco = ? WHERE id = ?';
+    $sql = 'UPDATE chamados set titulo = :titulo, categoria = :categoria, descricao = :descricao, statusTec = :statusTec, status = :status, preco = :preco WHERE id = :id';
 
 
-    $stmt = mysqli_prepare($conn, $sql);
+    $stmt = $conn->prepare($sql);
 
-    mysqli_stmt_bind_param($stmt, 'sssssdi', $titulo, $categoria, $descricao, $observacao, $status, $preco, $id);
+    $stmt->execute([
+        'titulo' => $titulo,
+        'categoria' => $categoria,
+        'descricao' => $descricao,
+        'statusTec' => $observacao,
+        'status' => $status,
+        'preco' => $preco,
+        'id' => $id
+    ]);
 
-    if (mysqli_stmt_execute($stmt)) {
+
+    if ($stmt->rowCount() > 0) {
         header('Location: consultar_chamado.php?message=success');
     } else {
         header('Location: consultar_chamado.php?message=error');

@@ -1,5 +1,7 @@
 <?php
 require_once '../verificaLogin.php';
+require_once '../FUNCAO/funcaoRelatorio.php';
+require_once '../FUNCAO/funcaoChamado.php';
 require_once '../conexao.php';
 
 $conn = conexao();
@@ -7,55 +9,14 @@ $conn = conexao();
 $busca = trim($_GET['busca'] ?? '');
 
 // CONTADORES
-$sqlAberto = "SELECT COUNT(*) AS total FROM chamados WHERE status = 'aberto'";
-$aberto = mysqli_fetch_assoc(mysqli_query($conn, $sqlAberto))['total'];
+$aberto = relatorioAberto($conn);
 
-$sqlAndamento = "SELECT COUNT(*) AS total FROM chamados WHERE status = 'em andamento'";
-$andamento = mysqli_fetch_assoc(mysqli_query($conn, $sqlAndamento))['total'];
+$andamento = relatorioAndamento($conn);
 
-$sqlConcluido = "SELECT COUNT(*) AS total FROM chamados WHERE status = 'concluido'";
-$concluido = mysqli_fetch_assoc(mysqli_query($conn, $sqlConcluido))['total'];
+$concluido = relatorioConcluido($conn);
 
 // BUSCA
-if ($busca) {
-
-    $buscaParam = "%$busca%";
-
-    $sql = "SELECT c.*, u.nome as usuario FROM chamados c
-            LEFT JOIN user u ON c.userId = u.id
-            WHERE c.status LIKE ?";
-
-    $stmt = mysqli_prepare($conn, $sql);
-
-    if (!$stmt) {
-        die("Erro na busca: " . mysqli_error($conn));
-    }
-
-    mysqli_stmt_bind_param($stmt, "s", $buscaParam);
-    mysqli_stmt_execute($stmt);
-
-    $result = mysqli_stmt_get_result($stmt);
-    $usuarios = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-    mysqli_stmt_close($stmt);
-
-} else {
-
-    $sql = "SELECT c.*, u.nome as usuario FROM chamados c
-            LEFT JOIN user u ON c.userId = u.id";
-
-    $result = mysqli_query($conn, $sql);
-
-    if (!$result) {
-        die("Erro na busca: " . mysqli_error($conn));
-    }
-
-    $usuarios = mysqli_fetch_all($result, MYSQLI_ASSOC);
-}
-
-if (!$usuarios) {
-    $usuarios = [];
-}
+$usuarios = buscarTodos($conn, $busca)
 ?>
 
 <!DOCTYPE html>

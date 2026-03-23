@@ -8,27 +8,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $senha = $_POST['senha'];
 
-    $sql = 'SELECT * FROM user WHERE email = ? OR usuario = ?';
-    $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, 'ss', $email, $email);
-    mysqli_stmt_execute($stmt);
+    $sql = 'SELECT * FROM user WHERE email = :login OR usuario = :login';
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([
+        'login' => $email,
+    ]);
 
-    $resul = mysqli_stmt_get_result($stmt);
+    $resul = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
-    if ($resul && mysqli_num_rows($resul) === 1) {
+    if ($resul) {
 
-        $user = mysqli_fetch_assoc($resul);
-
-        if (password_verify($senha, $user['senha'])) {
+        if (password_verify($senha, $resul['senha'])) {
 
             session_regenerate_id(true);
 
             $_SESSION['logado'] = true;
-            $_SESSION['nome'] = $user['nome'];
-            $_SESSION['usuario'] = $user['usuario'];
-            $_SESSION['id'] = $user['id'];
-            $_SESSION['nivel'] = $user['nivel'];
+            $_SESSION['nome'] = $resul['nome'];
+            $_SESSION['usuario'] = $resul['usuario'];
+            $_SESSION['id'] = $resul['id'];
+            $_SESSION['nivel'] = $resul['nivel'];
 
             header("Location: USUARIO/home.php");
             exit;
