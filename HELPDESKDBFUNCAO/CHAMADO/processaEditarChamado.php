@@ -1,6 +1,7 @@
 <?php
 include '../verificaLogin.php';
 require_once '../conexao.php';
+require_once '../FUNCAO/funcaoChamado.php';
 
 $conn = conexao();
 
@@ -15,23 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $preco = str_replace(',', '.', $_POST['preco']);
     $preco = (float) $preco;
 
-    $sql = 'UPDATE chamados set titulo = :titulo, categoria = :categoria, descricao = :descricao, statusTec = :statusTec, status = :status, preco = :preco WHERE id = :id';
+    $chamados = update($conn, $titulo, $categoria, $descricao, $observacao, $status, $preco, $id);
 
-
-    $stmt = $conn->prepare($sql);
-
-    $stmt->execute([
-        'titulo' => $titulo,
-        'categoria' => $categoria,
-        'descricao' => $descricao,
-        'statusTec' => $observacao,
-        'status' => $status,
-        'preco' => $preco,
-        'id' => $id
-    ]);
-
-
-    if ($stmt->rowCount() > 0) {
+    if ($chamados) {
         header('Location: consultar_chamado.php?message=success');
     } else {
         header('Location: consultar_chamado.php?message=error');

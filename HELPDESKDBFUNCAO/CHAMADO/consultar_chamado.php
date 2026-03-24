@@ -8,8 +8,20 @@ $conn = conexao();
 $busca = trim($_GET['busca'] ?? '');
 $statusOptions = ['aberto', 'em andamento', 'concluido'];
 
-$chamados = buscarTodos($conn, $busca)
-  ?>
+$chamados = buscarTodos($conn, $busca);
+$chamadoEditar = null;
+
+if (isset($_GET['editar'])) {
+  $idEditar = $_GET['editar'];
+  $chamadoEditar = buscarPorId($conn, $idEditar);
+}
+$chamadoExcluir = null;
+
+if (isset($_GET['excluir'])) {
+  $idExcluir = $_GET['excluir'];
+  $chamadoExcluir = buscarPorId($conn, $idExcluir);
+}
+?>
 
 <html>
 
@@ -94,24 +106,13 @@ $chamados = buscarTodos($conn, $busca)
 
                         <?php if ($chamado['status'] == 'aberto' || $ehAdmin): ?>
 
-                          <!-- Botão Editar -->
-                          <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
-                            data-target="#editarChamadoModal" data-id="<?= $chamado['id'] ?>"
-                            data-nome="<?= htmlspecialchars($chamado['usuario']) ?>"
-                            data-titulo="<?= htmlspecialchars($chamado['titulo']) ?>"
-                            data-categoria="<?= htmlspecialchars($chamado['categoria']) ?>"
-                            data-descricao="<?= htmlspecialchars($chamado['descricao']) ?>"
-                            data-observacao="<?= htmlspecialchars($chamado['statusTec']) ?>"
-                            data-status="<?= $chamado['status'] ?>" data-preco="<?= $chamado['preco'] ?>">
+                          <a href="consultar_chamado.php?editar=<?= $chamado['id'] ?>" class="btn btn-warning btn-sm">
                             Editar
-                          </button>
+                          </a>
 
-                          <!-- Botão Excluir (mantido individual) -->
-                          <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-                            data-target="#excluirChamadoModal" data-id="<?= $chamado['id'] ?>"
-                            data-nome="<?= htmlspecialchars($chamado['titulo']) ?>">
+                          <a href="consultar_chamado.php?excluir=<?= $chamado['id'] ?>" class="btn btn-danger btn-sm">
                             Excluir
-                          </button>
+                          </a>
                         <?php endif; ?>
 
                       </div>
@@ -134,102 +135,143 @@ $chamados = buscarTodos($conn, $busca)
   <!-- Modal Excluir -->
   <div class="modal fade" id="excluirChamadoModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
+
       <form action="processaExcluirChamado.php" method="POST" class="modal-content">
 
         <div class="modal-header">
           <h5 class="modal-title">Confirmar Exclusão</h5>
-          <button type="button" class="close" data-dismiss="modal">
+          <a href="consultar_chamado.php" class="close">
             <span>&times;</span>
-          </button>
+          </a>
         </div>
 
         <div class="modal-body">
-          <input type="hidden" name="id" id="excluirChamadoId">
+
+          <input type="hidden" name="id" value="<?= $chamadoExcluir['id'] ?? '' ?>">
 
           <p>Tem certeza que deseja excluir o chamado:</p>
-          <strong id="excluirChamadoNome"></strong>
+
+          <strong>
+            <?= $chamadoExcluir['titulo'] ?? '' ?>
+          </strong>
+
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          <a href="consultar_chamado.php" class="btn btn-secondary">
             Cancelar
-          </button>
+          </a>
+
           <button type="submit" class="btn btn-danger">
             Excluir
           </button>
         </div>
 
       </form>
+
     </div>
   </div>
-
   <!-- Modal único de edição -->
-  <div class="modal fade" id="editarChamadoModal" tabindex="-1" role="dialog" aria-labelledby="editarChamadoLabel"
-    aria-hidden="true">
+  <div class="modal fade" id="editarChamadoModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
+
         <form action="processaEditarChamado.php" method="POST">
+
           <div class="modal-header">
-            <h5 class="modal-title" id="editarChamadoLabel">Editar Chamado</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-              <span aria-hidden="true">&times;</span>
-            </button>
+            <h5 class="modal-title">Editar Chamado</h5>
+            <a href="consultar_chamado.php" class="close">
+              <span>&times;</span>
+            </a>
           </div>
+
           <div class="modal-body">
-            <input type="hidden" name="id" id="modalChamadoId">
+
+            <input type="hidden" name="id" value="<?= $chamadoEditar['id'] ?? '' ?>">
 
             <div class="form-group">
               <label>Nome</label>
-              <input type="text" name="nome" class="form-control" id="modalChamadoNome" required readonly>
+              <input type="text" name="nome" class="form-control" value="<?= $chamadoEditar['usuario'] ?? '' ?>"
+                readonly>
             </div>
 
             <div class="form-group">
               <label>Equipamento</label>
-              <input type="text" name="titulo" class="form-control" id="modalChamadoTitulo" required>
+              <input type="text" name="titulo" class="form-control" required
+                value="<?= $chamadoEditar['titulo'] ?? '' ?>">
             </div>
 
             <div class="form-group">
               <label>Categoria</label>
-              <input type="text" name="categoria" class="form-control" id="modalChamadoCategoria" required>
+
+              <select name="categoria" class="form-control">
+
+                <option value="criação_usuario" <?= ($chamadoEditar['categoria'] ?? '') == 'criação_usuario' ? 'selected' : '' ?>>
+                  Criação Usuário
+                </option>
+
+                <option value="impressora" <?= ($chamadoEditar['categoria'] ?? '') == 'impressora' ? 'selected' : '' ?>>
+                  Impressora
+                </option>
+
+                <option value="hardware" <?= ($chamadoEditar['categoria'] ?? '') == 'hardware' ? 'selected' : '' ?>>
+                  Hardware
+                </option>
+
+                <option value="software" <?= ($chamadoEditar['categoria'] ?? '') == 'software' ? 'selected' : '' ?>>
+                  Software
+                </option>
+
+                <option value="rede" <?= ($chamadoEditar['categoria'] ?? '') == 'rede' ? 'selected' : '' ?>>
+                  Rede
+                </option>
+
+              </select>
             </div>
 
             <div class="form-group">
               <label>Descrição</label>
-
-              <textarea name="descricao" class="form-control" id="modalChamadoDescricao"></textarea>
-
+              <textarea name="descricao" class="form-control"><?=
+                $chamadoEditar['descricao'] ?? '' ?></textarea>
             </div>
 
             <div class="form-group">
               <label>Observação</label>
-
-              <textarea name="observacao" class="form-control" id="modalChamadoObservacao"></textarea>
-
+              <textarea name="observacao" class="form-control"><?=
+                $chamadoEditar['statusTec'] ?? '' ?></textarea>
             </div>
 
-
             <?php if ($_SESSION['nivel'] === 'admin' || $_SESSION['nivel'] === 'tecnico'): ?>
+
               <div class="form-group">
                 <label>Status</label>
-                <select name="status" class="form-control" id="modalChamadoStatus">
+                <select name="status" class="form-control">
+
                   <?php foreach ($statusOptions as $status): ?>
-                    <option value="<?= $status ?>"><?= ucfirst($status) ?></option>
+                    <option value="<?= $status ?>" <?= (isset($chamadoEditar['status']) && $chamadoEditar['status'] == $status) ? 'selected' : '' ?>>
+                      <?= ucfirst($status) ?>
+                    </option>
                   <?php endforeach; ?>
+
                 </select>
               </div>
 
               <div class="form-group">
                 <label>Preço</label>
-                <input type="text" name="preco" class="form-control" id="modalChamadoPreco" required>
+                <input type="text" name="preco" class="form-control" value="<?= $chamadoEditar['preco'] ?? '' ?>">
               </div>
+
             <?php endif; ?>
 
           </div>
+
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <a href="consultar_chamado.php" class="btn btn-secondary">Cancelar</a>
             <button type="submit" class="btn btn-primary">Salvar Alterações</button>
           </div>
+
         </form>
+
       </div>
     </div>
   </div>
@@ -239,66 +281,16 @@ $chamados = buscarTodos($conn, $busca)
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-  <!-- Script para popular o modal -->
-  <script>
-    var nivelUsuario = "<?= $_SESSION['nivel'] ?>";
-  </script>
-  <script>
-    $('#excluirChamadoModal').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget);
-
-      var id = button.data('id');
-      var nome = button.data('nome');
-
-      $('#excluirChamadoId').val(id);
-      $('#excluirChamadoNome').text(nome);
-    });
-    $('#editarChamadoModal').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget);
-
-      var id = button.data('id');
-      var nome = button.data('nome');
-      var titulo = button.data('titulo');
-      var categoria = button.data('categoria');
-      var descricao = button.data('descricao');
-      var observacao = button.data('observacao');
-      var status = button.data('status');
-      var preco = button.data('preco');
-
-      $('#modalChamadoId').val(id);
-      $('#modalChamadoNome').val(nome);
-      $('#modalChamadoTitulo').val(titulo);
-      $('#modalChamadoCategoria').val(categoria);
-      $('#modalChamadoDescricao').val(descricao);
-      $('#modalChamadoObservacao').val(observacao);
-
-      // 🔥 AQUI A CORREÇÃO
-
-      if (nivelUsuario === 'admin' || nivelUsuario === 'tecnico') {
-        // 🔥 Admin/Técnico: tudo liberado
-        $('#modalChamadoDescricao').prop('readonly', false);
-        $('#modalChamadoObservacao').prop('readonly', false);
-        $('#modalChamadoDescricao').prop('required', true);
-
-      } else {
-        // 👤 Usuário comum
-        if (status !== 'aberto') {
-          $('#modalChamadoDescricao').prop('readonly', true);
-          $('#modalChamadoObservacao').prop('readonly', true);
-          $('#modalChamadoDescricao').prop('required', false);
-        } else {
-          $('#modalChamadoDescricao').prop('readonly', false);
-          $('#modalChamadoObservacao').prop('readonly', false);
-          $('#modalChamadoDescricao').prop('required', true);
-        }
-      }
-
-      <?php if ($_SESSION['nivel'] === 'admin' || $_SESSION['nivel'] === 'tecnico'): ?>
-        $('#modalChamadoStatus').val(status);
-        $('#modalChamadoPreco').val(preco);
-      <?php endif; ?>
-    });
-  </script>
+  <?php if (!empty($chamadoEditar)): ?>
+    <script>
+      $('#editarChamadoModal').modal('show');
+    </script>
+  <?php endif; ?>
+  <?php if (!empty($chamadoExcluir)): ?>
+    <script>
+      $('#excluirChamadoModal').modal('show');
+    </script>
+  <?php endif; ?>
 </body>
 
 </html>

@@ -1,6 +1,7 @@
 <?php
 require_once '../verificaLogin.php';
 require_once '../conexao.php';
+require_once '../FUNCAO/funcaoChamado.php';
 
 $conn = conexao();
 
@@ -12,20 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $descricao = $_POST['descricao'];
     $idUser = $_SESSION['id'];
 
-    $sql = 'INSERT INTO chamados(titulo, categoria, descricao, userId) values(:titulo, :categoria, :descricao, :userId)';
+    $criarChamado = criar($conn, $titulo, $categoria, $descricao, $idUser);
 
-    $stmt = $conn->prepare($sql);
-
-    $stmt->execute([
-        'titulo' => $titulo,
-        'categoria' => $categoria,
-        'descricao' => $descricao,
-        'userId' => $idUser
-    ]);
-
- 
-
-    if ($stmt) {
+    if ($criarChamado) {
         header('Location: abrir_chamado.php?message=sucess');
         exit;
     } else {
