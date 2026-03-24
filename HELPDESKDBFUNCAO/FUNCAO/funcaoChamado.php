@@ -2,12 +2,18 @@
 
 function buscarPorId($conn, $id)
 {
-    $sql = "SELECT * FROM chamados WHERE id = ?";
+    $id = (int) $id;
+
+    $sql = "SELECT c.*, u.nome as usuario
+            FROM chamados c
+            LEFT JOIN user u ON c.userId = u.id
+            WHERE c.id = ?";
+
     $stmt = $conn->prepare($sql);
     $stmt->execute([$id]);
-    return $stmt->fetch();
-}
 
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
 function buscarTodos($conn, $busca)
 {
     try {

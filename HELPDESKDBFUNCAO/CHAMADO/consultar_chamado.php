@@ -9,6 +9,8 @@ $busca = trim($_GET['busca'] ?? '');
 $statusOptions = ['aberto', 'em andamento', 'concluido'];
 
 $chamados = buscarTodos($conn, $busca);
+
+
 $chamadoEditar = null;
 
 if (isset($_GET['editar'])) {
@@ -94,9 +96,11 @@ if (isset($_GET['excluir'])) {
                     <div class="card bg-light h-100">
                       <div class="card-body">
                         <h5 class="card-title"><?= $chamado['usuario'] ?></h5>
-                        <h6><?= $chamado['titulo'] ?></h6>
-                        <small class="text-muted"><?= $chamado['categoria'] ?></small>
-                        <p class="mt-2"><?= $chamado['descricao'] ?></p>
+                        <h6 class="card-subtitle">chamado: <?= mb_substr(md5($chamado['id']), 0, 10) ?></h6>
+                        <hr>
+                        <h6><strong>Título: </strong><?= $chamado['titulo'] ?></h6>
+                        <small class="text-muted"> <strong>Categoria: </strong> <?= $chamado['categoria'] ?></small>
+                        <p class="mt-2"> <strong>Descrição: </strong> <?= $chamado['descricao'] ?></p>
                         <p><strong>Status:</strong> <?= $chamado['status'] ?? '' ?></p>
                         <?php if ($chamado['preco'] !== null): ?>
                           <p><strong>Preço:</strong> R$ <?= $chamado['preco'] ?></p>
@@ -235,13 +239,15 @@ if (isset($_GET['excluir'])) {
                 $chamadoEditar['descricao'] ?? '' ?></textarea>
             </div>
 
-            <div class="form-group">
-              <label>Observação</label>
-              <textarea name="observacao" class="form-control"><?=
-                $chamadoEditar['statusTec'] ?? '' ?></textarea>
-            </div>
 
             <?php if ($_SESSION['nivel'] === 'admin' || $_SESSION['nivel'] === 'tecnico'): ?>
+
+
+              <div class="form-group">
+                <label>Observação</label>
+                <textarea name="observacao" class="form-control"><?=
+                  $chamadoEditar['statusTec'] ?? '' ?></textarea>
+              </div>
 
               <div class="form-group">
                 <label>Status</label>
