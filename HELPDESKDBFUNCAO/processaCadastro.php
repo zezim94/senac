@@ -14,13 +14,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
-    $sql = 'INSERT INTO user(nome, usuario, email, senha, nivel) values(?, ?, ?, ?, ?)';
+    $sql = 'INSERT INTO user(nome, usuario, email, senha, nivel) values(:nome, :usuario, :email, :senha, :nivel)';
 
-    $stmt = mysqli_prepare($conn, $sql);
+    $stmt = $conn->prepare($sql);
 
-    mysqli_stmt_bind_param($stmt, 'sssss', $nome, $usuario, $email, $senhaHash, $nivel);
+    $stmt->execute([
+        'nome' => $nome,
+        'usuario' => $usuario,
+        'email' => $email,
+        'senha' => $senhaHash,
+        'nivel' => $nivel
+    ]);
 
-    if (mysqli_stmt_execute($stmt)) {
+    if (($stmt)) {
         header('Location: index.php?message=sucess');
         exit;
 
@@ -32,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 } else {
     header('Location: index.php');
-   
+
 }
 
 ?>
