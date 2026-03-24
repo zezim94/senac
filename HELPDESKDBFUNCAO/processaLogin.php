@@ -22,12 +22,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (password_verify($senha, $resul['senha'])) {
 
             session_regenerate_id(true);
-
             $_SESSION['logado'] = true;
             $_SESSION['nome'] = $resul['nome'];
             $_SESSION['usuario'] = $resul['usuario'];
             $_SESSION['id'] = $resul['id'];
-            $_SESSION['nivel'] = $resul['nivel'];
+            if ($resul['status']) {
+                $_SESSION['nivel'] = $resul['nivel'];
+            } else {
+                $_SESSION['nivel'] = 'user';
+            }
 
             header("Location: USUARIO/home.php");
             exit;

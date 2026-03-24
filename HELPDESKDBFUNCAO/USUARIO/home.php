@@ -7,6 +7,14 @@ $conn = conexao();
 
 $totalUser = contarRegistros($conn, 'user');
 $totalChamado = contarRegistros($conn, 'chamados');
+$usuarios = buscarUsuario($conn);
+$totalAprovar = 0;
+
+foreach($usuarios as $user){
+  if(!$user['status']){
+$totalAprovar ++;
+  }
+}
 ?>
 <html>
 
@@ -48,7 +56,6 @@ $totalChamado = contarRegistros($conn, 'chamados');
 
 <body>
 
-
   <?php include __DIR__ . '/../LAYOUT/nav.php'; ?>
 
   <div class="container">
@@ -65,13 +72,13 @@ $totalChamado = contarRegistros($conn, 'chamados');
           <div class="card-body">
             <div class="row">
 
-              <div class="col-3 d-flex justify-content-center">
+              <div class="col-2 d-flex justify-content-center">
                 <a href="../CHAMADO/abrir_chamado.php">
                   <img src="../img/formulario_abrir_chamado.png" width="70" height="70">
                 </a>
               </div>
 
-              <div class="col-3 d-flex justify-content-center">
+              <div class="col-2 d-flex justify-content-center">
                 <a href="../CHAMADO/consultar_chamado.php" class="icon-wrapper">
 
                   <?php if ($_SESSION['nivel'] == 'admin' || $_SESSION['nivel'] == 'tecnico'): ?>
@@ -108,6 +115,15 @@ $totalChamado = contarRegistros($conn, 'chamados');
                   <a href="usuarios.php" class="icon-wrapper">
                     <?php echo "<span>" . $totalUser . "</span>" ?>
                     <img src="../img/user.png" width="70" height="70">
+                  </a>
+                </div>
+              <?php } ?>
+
+              <?php if ($_SESSION['nivel'] == 'admin') { ?>
+                <div class="col-2 d-flex justify-content-center">
+                  <a href="usuarios_pedidos.php" class="icon-wrapper">
+                    <?php echo "<span>" . $totalAprovar . "</span>" ?>
+                    <img src="../img/user_pedido.png" width="70" height="70">
                   </a>
                 </div>
               <?php } ?>

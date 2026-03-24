@@ -138,3 +138,26 @@ function contarRegistros($conn, $tabela)
         return 0;
     }
 }
+
+function aprovar($conn, $nivel, $id)
+{
+
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+        require_once '../conexao.php';
+        $conn = conexao();
+
+        $nivel = $_POST['nivel'];
+        $id = $_POST['id'];
+
+        $stmt = $conn->prepare("UPDATE user SET nivel = :nivel, status = 1 WHERE id = :id");
+
+        return $stmt->execute([
+            'nivel' => $nivel,
+            'id' => $id
+        ]);
+
+
+    }
+}
