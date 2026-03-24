@@ -8,20 +8,20 @@ $conn = conexao();
 $busca = trim($_GET['busca'] ?? '');
 $statusOptions = ['aberto', 'em andamento', 'concluido'];
 
-$chamados = buscarTodos($conn, $busca);
+$chamados = buscarTodosChamados($conn, $busca);
 
 
 $chamadoEditar = null;
 
 if (isset($_GET['editar'])) {
   $idEditar = $_GET['editar'];
-  $chamadoEditar = buscarPorId($conn, $idEditar);
+  $chamadoEditar = buscarPorIdChamados($conn, $idEditar);
 }
 $chamadoExcluir = null;
 
 if (isset($_GET['excluir'])) {
   $idExcluir = $_GET['excluir'];
-  $chamadoExcluir = buscarPorId($conn, $idExcluir);
+  $chamadoExcluir = buscarPorIdChamados($conn, $idExcluir);
 }
 ?>
 

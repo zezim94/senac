@@ -2,6 +2,7 @@
 require_once '../verificaLogin.php';
 require_once '../FUNCAO/funcaoRelatorio.php';
 require_once '../FUNCAO/funcaoChamado.php';
+require_once '../FUNCAO/funcaoUsuario.php';
 require_once '../conexao.php';
 
 $conn = conexao();
@@ -16,7 +17,7 @@ $andamento = relatorioAndamento($conn);
 $concluido = relatorioConcluido($conn);
 
 // BUSCA
-$usuarios = buscarTodos($conn, $busca)
+$chamados = buscarTodosChamados($conn, $busca)
 ?>
 
 <!DOCTYPE html>
@@ -93,7 +94,7 @@ $usuarios = buscarTodos($conn, $busca)
                         </thead>
 
                         <tbody>
-                            <?php foreach ($usuarios as $user): ?>
+                            <?php foreach ($chamados as $user): ?>
                                 <tr>
                                     <td><?= $user['id'] ?></td>
                                     <td><?= htmlspecialchars($user['usuario']) ?></td>

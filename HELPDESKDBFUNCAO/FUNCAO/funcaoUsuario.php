@@ -42,7 +42,7 @@ function atualizarUsuario($conn, $id, $nome, $usuario, $email, $nivel, $senha = 
 
             $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
-            $sql = "UPDATE user SET nome = :nome, usuario = :usuario, emali = :email, senha = :senha, nivel = :nivel WHERE id = :id";
+            $sql = "UPDATE user SET nome = :nome, usuario = :usuario, email = :email, senha = :senha, nivel = :nivel WHERE id = :id";
 
             $stmt = $conn->prepare($sql);
 

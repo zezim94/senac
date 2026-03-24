@@ -1,6 +1,6 @@
 <?php
 
-function buscarPorId($conn, $id)
+function buscarPorIdChamados($conn, $id)
 {
     $id = (int) $id;
 
@@ -14,15 +14,17 @@ function buscarPorId($conn, $id)
 
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
-function buscarTodos($conn, $busca)
+function buscarTodosChamados($conn, $busca)
 {
     try {
 
         if (!empty($busca)) {
             $sql = 'SELECT c.*, u.nome as usuario FROM chamados c 
-            LEFT JOIN user u  ON c.userId = u.id
-            WHERE titulo LIKE :titulo OR categoria LIKE :categoria OR status LIKE :status OR usuario LIKE :usuario';
-
+            LEFT JOIN user u ON c.userId = u.id
+            WHERE c.titulo LIKE :titulo 
+            OR c.categoria LIKE :categoria 
+            OR c.status LIKE :status 
+            OR u.nome LIKE :usuario';
 
             $stmt = $conn->prepare($sql);
 
@@ -32,18 +34,20 @@ function buscarTodos($conn, $busca)
                 'status' => "%$busca%",
                 'usuario' => "%$busca%"
             ]);
+
         } else {
+
             $sql = 'SELECT c.*, u.nome as usuario FROM chamados c 
-            LEFT JOIN user u  ON c.userId = u.id';
+            LEFT JOIN user u ON c.userId = u.id';
 
             $stmt = $conn->prepare($sql);
             $stmt->execute();
         }
 
-        $chamados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $chamados;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     } catch (PDOException $e) {
+        echo $e->getMessage(); // 👈 ativa isso pra debug
         return false;
     }
 }
