@@ -22,6 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: usuario.php');
         exit;
 
+    } else {
+        header('Location: login.php');
     }
 
 }

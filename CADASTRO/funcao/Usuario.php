@@ -49,3 +49,15 @@ function bucarUserPorId($pdo, $id)
 
     return $user;
 }
+
+function excluirUser($pdo, $id)
+{
+    $stmt = $pdo->prepare("DELETE FROM `user` WHERE id = :id");
+    $stmt->execute(['id' => $id]);
+
+    if ($stmt) {
+        header('Location: usuario.php');
+    } else {
+        header('Location: usuario.php');
+    }
+}

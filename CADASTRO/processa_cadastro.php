@@ -12,8 +12,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $senha = $_POST['pass'];
     $confirmSenha = $_POST['confirmPass'];
 
+    $userCadastrado = listarUser($pdo);
 
-    if($senha !== $confirmSenha) return;
+    foreach ($userCadastrado as $user) {
+        if ($user['email'] === $email) {
+            header('Location: cadastro.php');
+            exit;
+
+        }
+    }
+
+    if ($senha !== $confirmSenha) {
+        header('Location: cadastro.php');
+        exit;
+    }
 
     $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
