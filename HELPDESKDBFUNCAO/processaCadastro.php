@@ -1,7 +1,6 @@
 <?php
 require_once 'conexao.php';
 
-
 $conn = conexao();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -14,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
-    $sql = 'INSERT INTO user(nome, usuario, email, senha, nivel) values(:nome, :usuario, :email, :senha, :nivel)';
+    $sql = 'INSERT INTO user(nome, usuario, email, senha, nivel, status) values(:nome, :usuario, :email, :senha, :nivel, 0)';
 
     $stmt = $conn->prepare($sql);
 
