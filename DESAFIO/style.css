@@ -1,0 +1,119 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-image: url('img/fundo.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background-color: #34343A;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    width: 600px;
+    margin: 0 auto;
+}
+
+form select {
+    width: 70%;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+form input {
+    width: 25%;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.exibir {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 700px;
+    margin-top: 20px;
+    position: relative;
+}
+
+.exibir img {
+    width: 600px;
+    height: 500px;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+}
+
+.exibir .img {
+    position: relative;
+    width: 600px;
+    height: 500px;
+}
+
+.exibir .nome {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+    font-size: 20px;
+    border-radius: 0 0 10px 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.detalhes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 600px;
+    border-radius: 10px;
+    /* background-color: #123542; */
+    color: #fff;
+}
+
+.detalhes h3 {
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.detalhes p {
+    font-size: 16px;
+    font-weight: bold;
+    color: red;
+}

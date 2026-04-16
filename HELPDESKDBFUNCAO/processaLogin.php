@@ -16,7 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $resul = $stmt->fetch(PDO::FETCH_ASSOC);
 
-
     if ($resul) {
 
         if (password_verify($senha, $resul['senha'])) {
