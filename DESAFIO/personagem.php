@@ -7,15 +7,14 @@ class Personagem extends Person implements Img
 {
     public $img;
     public $descricao;
-    public $caracteristicas;
     public $resumo;
 
     public function __construct($img, $nome, $descricao, $caracteristicas, $resumo)
     {
+        parent::__construct($nome, $caracteristicas);
+
         $this->img = $img;
-        $this->nome = $nome;
         $this->descricao = $descricao;
-        $this->caracteristicas = $caracteristicas;
         $this->resumo = $resumo;
     }
 
@@ -27,7 +26,7 @@ class Personagem extends Person implements Img
     function session($tipo)
     {
         $_SESSION['personagem'] = $tipo;
-        $_SESSION['img'] = $this->img;
+        $_SESSION['img'] = $this->pegarImagem();
         $_SESSION['nome'] = $this->nome;
         $_SESSION['descricao'] = $this->descricao;
         $_SESSION['caracteristicas'] = $this->caracteristicas;

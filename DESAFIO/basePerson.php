@@ -3,11 +3,11 @@
 abstract class Person
 {
 
-    public $nome, $caracteristica;
+    public $nome, $caracteristicas;
 
-    public function __construct($nome, $caracteristica)
+    public function __construct($nome, $caracteristicas)
     {
         $this->nome = $nome;
-        $this->caracteristica = $caracteristica;
+        $this->caracteristicas = $caracteristicas;
     }
 }
